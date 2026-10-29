@@ -1,6 +1,6 @@
 {
   "name": "extended-srs-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "MCP server for Extended SRS validation and aggregation",
   "repository": {

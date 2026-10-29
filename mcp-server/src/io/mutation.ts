@@ -25,16 +25,22 @@ async function acquire(root: StorageRoot): Promise<() => Promise<void>> {
     }
     throw root.mutationFailure ?? new Error('SRS update lock keeper exited');
   });
+  stopped.catch(() => undefined);
+  // exit may precede buffered IPC. Wait for close before deciding that no
+  // acquisition response arrived; a queued ELOCKED response must stay retryable.
+  const closed = once(keeper, 'close').then(() => stopped);
   try {
-    const [message] = await Promise.race([once(keeper, 'message'), stopped]);
+    const [message] = await Promise.race([once(keeper, 'message'), closed]);
     if (message.error) {
       throw Object.assign(new Error(message.error.message), { code: message.error.code });
+    }
+    if (root.mutationFailure) {
+      throw root.mutationFailure;
     }
   } catch (error) {
     await exited.catch(() => undefined);
     throw error;
   }
-  stopped.catch(() => undefined);
   return async () => {
     releasing = true;
     if (keeper.connected) {

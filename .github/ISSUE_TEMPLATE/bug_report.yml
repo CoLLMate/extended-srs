@@ -1,0 +1,47 @@
+# Copyright (c) 2026 CoLLMate, Inc.
+# SPDX-License-Identifier: Apache-2.0
+name: 不具合報告
+description: 仕様・公式実装・ドキュメントの不具合を報告します。
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues は不具合報告のみ受け付けます。質問、機能追加の要望、個別環境へのサポートは対象外です。
+
+        報告には、使用バージョン、再現手順、期待する動作、実際の動作を記載してください。
+
+        返信・調査・修正の実施および対応時期は保証しません。受付対象外の投稿はクローズする場合があります。
+  - type: input
+    id: version
+    attributes:
+      label: 使用バージョン
+      description: リリース版以外を使用している場合は、コミット SHA を記載してください。
+      placeholder: v1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 再現手順
+      description: 再現に必要な文書・コードと、操作手順を記載してください。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
+      description: 本来どのように動作することを期待したかを記載してください。
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の動作
+      description: 実際に起きたことと、表示されたエラーがあれば記載してください。
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 実行環境（任意）
+      description: 関連する OS、Node.js・Python・ブラウザー、MCP クライアントなどの種類とバージョンを記載してください。

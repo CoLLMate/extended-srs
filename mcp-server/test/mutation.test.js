@@ -91,6 +91,107 @@ for (const kind of ['active', 'abandoned', 'symlink', 'file']) {
   });
 }
 
+for (const waitForTurn of [false, true]) {
+  test(`keeper exit before its contention response preserves ${waitForTurn ? 'waiting' : 'conflict reporting'}`, async (t) => {
+    const fx = await createSRSFixture({ files: { 'srs.md': 'original' } });
+    const entered = Promise.withResolvers();
+    const relinquish = Promise.withResolvers();
+    const holding = withMutation(fx.specRoot, async () => {
+      entered.resolve();
+      await relinquish.promise;
+    });
+    try {
+      await Promise.race([entered.promise, holding]);
+      let attempts = 0;
+      let delayedResponse = false;
+      interceptKeeper(t, (original, filename, args, options) => {
+        const keeper = original(filename, args, options);
+        attempts++;
+        if (attempts !== 1) {
+          return keeper;
+        }
+        const emit = keeper.emit.bind(keeper);
+        let pending;
+        keeper.emit = (event, ...values) => {
+          if (event === 'message' && values[0].error?.code === 'ELOCKED') {
+            pending = values;
+            return true;
+          }
+          if (event === 'close' && pending) {
+            // exit can precede buffered IPC; close follows its delivery.
+            setImmediate(() => {
+              delayedResponse = true;
+              if (waitForTurn) {
+                relinquish.resolve();
+              }
+              emit('message', ...pending);
+              emit('close', ...values);
+            });
+            return true;
+          }
+          return emit(event, ...values);
+        };
+        return keeper;
+      });
+      const operation = withMutation(
+        fx.specRoot,
+        async (root) => {
+          assert.equal(waitForTurn, true, 'a contending writer must not enter');
+          await replaceDocument(root, 'srs.md', 'original', 'updated');
+        },
+        waitForTurn,
+      );
+      if (waitForTurn) {
+        await operation;
+        assert.ok(attempts > 1, 'contention must be retried');
+        assert.equal(await fx.readFile('srs.md'), 'updated');
+      } else {
+        await assert.rejects(operation, /Concurrent SRS update conflict/);
+        assert.equal(await fx.readFile('srs.md'), 'original');
+      }
+      assert.equal(delayedResponse, true, 'the response must follow exit');
+    } finally {
+      relinquish.resolve();
+      await holding;
+      await fx.cleanup();
+    }
+  });
+}
+
+test('a queued ready response from an exited keeper cannot enter the callback', async (t) => {
+  const fx = await createSRSFixture({ files: { 'srs.md': 'original' } });
+  t.after(() => fx.cleanup());
+  let delayedReady = false;
+  interceptKeeper(t, (original, filename, args, options) => {
+    const keeper = original(filename, args, options);
+    const emit = keeper.emit.bind(keeper);
+    let pending;
+    keeper.emit = (event, ...values) => {
+      if (event === 'message' && values[0].ready) {
+        pending = values;
+        keeper.kill('SIGKILL');
+        return true;
+      }
+      if (event === 'close' && pending) {
+        setImmediate(() => {
+          delayedReady = true;
+          emit('message', ...pending);
+          emit('close', ...values);
+        });
+        return true;
+      }
+      return emit(event, ...values);
+    };
+    return keeper;
+  });
+  await assert.rejects(
+    withMutation(fx.specRoot, async () => assert.fail('entered without a live keeper')),
+    /lock was lost/,
+  );
+  assert.equal(delayedReady, true);
+  assert.equal(await fx.readFile('srs.md'), 'original');
+});
+
 for (const failure of ['spawn', 'before ready', 'after ready']) {
   test(`keeper failure ${failure} cannot leave a callback writing without its lock`, async (t) => {
     const fx = await createSRSFixture({ files: { 'srs.md': 'original' } });

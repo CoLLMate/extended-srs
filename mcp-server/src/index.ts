@@ -9,7 +9,7 @@ import { dispatchTool } from './protocol/dispatch.js';
 
 async function main() {
   const server = new Server(
-    { name: 'extended-srs-server', version: '1.0.0' },
+    { name: 'extended-srs-server', version: '1.0.1' },
     { capabilities: { tools: {} } },
   );
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
