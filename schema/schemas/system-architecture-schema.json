@@ -1,0 +1,2488 @@
+{
+  "$comment": "Copyright (c) 2026 CoLLMate, Inc. SPDX-License-Identifier: Apache-2.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://exsrs.org/extended-srs/v1/schemas/system-architecture.json",
+  "type": "object",
+  "title": "システムアーキテクチャ",
+  "description": "開発開始前に決定すべき技術基盤と設計方針",
+  "properties": {
+    "architecture": {
+      "$ref": "#/definitions/architecture"
+    },
+    "tech_stack": {
+      "$ref": "#/definitions/techStack"
+    },
+    "data_models": {
+      "$ref": "#/definitions/dataModels"
+    },
+    "common_technical_policies": {
+      "$ref": "#/definitions/commonTechnicalPolicies"
+    },
+    "deployment_strategy": {
+      "$ref": "#/definitions/deploymentStrategy"
+    },
+    "development_principles": {
+      "$ref": "#/definitions/developmentPrinciples"
+    }
+  },
+  "required": [
+    "architecture"
+  ],
+  "definitions": {
+    "interfaceContract": {
+      "type": "object",
+      "title": "インターフェース契約",
+      "required": [
+        "interface_id",
+        "version",
+        "interface_type",
+        "definition"
+      ],
+      "properties": {
+        "interface_id": {
+          "type": "string",
+          "title": "インターフェースID",
+          "description": "インターフェースの識別子。同一モジュール内で一意"
+        },
+        "name": {
+          "type": "string",
+          "title": "インターフェース名"
+        },
+        "version": {
+          "type": "string",
+          "title": "バージョン"
+        },
+        "interface_type": {
+          "type": "string",
+          "enum": [
+            "http-api",
+            "grpc",
+            "graphql",
+            "event",
+            "message-queue",
+            "database-access",
+            "file-io",
+            "library-api"
+          ],
+          "title": "インターフェースタイプ",
+          "description": "http-api: REST API, grpc: gRPC, graphql: GraphQL, event: イベント, message-queue: メッセージキュー, database-access: DB操作インターフェース, file-io: ファイル入出力, library-api: プログラム内部API（クラス、関数等）。definition.type と必ず一致すること。"
+        },
+        "definition": {
+          "title": "インターフェース定義",
+          "description": "プロトコル固有の詳細定義",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/httpApiInterface"
+            },
+            {
+              "$ref": "#/definitions/grpcInterface"
+            },
+            {
+              "$ref": "#/definitions/graphqlInterface"
+            },
+            {
+              "$ref": "#/definitions/eventInterface"
+            },
+            {
+              "$ref": "#/definitions/messageQueueInterface"
+            },
+            {
+              "$ref": "#/definitions/databaseAccessInterface"
+            },
+            {
+              "$ref": "#/definitions/fileIoInterface"
+            },
+            {
+              "$ref": "#/definitions/libraryApiInterface"
+            }
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "http-api"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "http-api"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "grpc"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "grpc"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "graphql"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "graphql"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "event"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "event"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "message-queue"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "message-queue"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "database-access"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "database-access"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "file-io"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "file-io"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "interface_type": {
+                "const": "library-api"
+              }
+            },
+            "required": [
+              "interface_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "properties": {
+                  "type": {
+                    "const": "library-api"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "httpApiInterface": {
+      "type": "object",
+      "title": "HTTP APIインターフェース",
+      "required": [
+        "type",
+        "path",
+        "method"
+      ],
+      "properties": {
+        "type": {
+          "const": "http-api"
+        },
+        "path": {
+          "type": "string",
+          "title": "パス"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH"
+          ]
+        },
+        "request_schema": {
+          "type": [
+            "object",
+            "boolean"
+          ],
+          "title": "リクエストスキーマ",
+          "description": "リクエスト本文のデータ構造。JSON Schema Draft 7 で型を直接記述する。",
+          "allOf": [
+            {
+              "$ref": "common-definitions-schema.json#/definitions/jsonSchema"
+            }
+          ]
+        },
+        "response_schema": {
+          "type": [
+            "object",
+            "boolean"
+          ],
+          "title": "レスポンススキーマ",
+          "description": "レスポンス本文のデータ構造。JSON Schema Draft 7 で型を直接記述する。",
+          "allOf": [
+            {
+              "$ref": "common-definitions-schema.json#/definitions/jsonSchema"
+            }
+          ]
+        },
+        "headers": {
+          "type": "object",
+          "title": "ヘッダー定義",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "HTTPヘッダー名と送信する文字列値の対応"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "grpcInterface": {
+      "type": "object",
+      "title": "gRPCインターフェース",
+      "required": [
+        "type",
+        "service",
+        "method"
+      ],
+      "properties": {
+        "type": {
+          "const": "grpc"
+        },
+        "service": {
+          "type": "string",
+          "title": "サービス名"
+        },
+        "method": {
+          "type": "string",
+          "title": "メソッド名"
+        },
+        "request_type": {
+          "type": "string",
+          "title": "リクエスト型"
+        },
+        "response_type": {
+          "type": "string",
+          "title": "レスポンス型"
+        },
+        "proto_file": {
+          "type": "string",
+          "title": "protoファイルパス"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "graphqlInterface": {
+      "type": "object",
+      "title": "GraphQLインターフェース",
+      "required": [
+        "type",
+        "operation_type",
+        "operation_name"
+      ],
+      "properties": {
+        "type": {
+          "const": "graphql"
+        },
+        "operation_type": {
+          "type": "string",
+          "enum": [
+            "query",
+            "mutation",
+            "subscription"
+          ],
+          "title": "操作タイプ"
+        },
+        "operation_name": {
+          "type": "string",
+          "title": "操作名"
+        },
+        "schema": {
+          "type": "string",
+          "title": "GraphQLスキーマ"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "eventInterface": {
+      "type": "object",
+      "title": "イベントインターフェース",
+      "required": [
+        "type",
+        "event_name",
+        "payload_schema"
+      ],
+      "properties": {
+        "type": {
+          "const": "event"
+        },
+        "event_name": {
+          "type": "string",
+          "title": "イベント名"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "domain",
+            "integration",
+            "system"
+          ],
+          "title": "イベントタイプ"
+        },
+        "payload_schema": {
+          "type": [
+            "object",
+            "boolean"
+          ],
+          "title": "ペイロードスキーマ",
+          "description": "イベントのペイロードのデータ構造。JSON Schema Draft 7 で型を直接記述する。",
+          "allOf": [
+            {
+              "$ref": "common-definitions-schema.json#/definitions/jsonSchema"
+            }
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "messageQueueInterface": {
+      "type": "object",
+      "title": "メッセージキューインターフェース",
+      "required": [
+        "type",
+        "queue_name",
+        "message_type"
+      ],
+      "properties": {
+        "type": {
+          "const": "message-queue"
+        },
+        "queue_name": {
+          "type": "string",
+          "title": "キュー名"
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "publish",
+            "subscribe",
+            "request-reply"
+          ],
+          "title": "メッセージタイプ"
+        },
+        "message_schema": {
+          "type": [
+            "object",
+            "boolean"
+          ],
+          "title": "メッセージスキーマ",
+          "description": "メッセージのデータ構造。JSON Schema Draft 7 で型を直接記述する。",
+          "allOf": [
+            {
+              "$ref": "common-definitions-schema.json#/definitions/jsonSchema"
+            }
+          ]
+        },
+        "broker": {
+          "type": "string",
+          "title": "ブローカー",
+          "description": "使用するメッセージブローカー（RabbitMQ、Kafka等）"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "databaseAccessInterface": {
+      "type": "object",
+      "title": "データベースアクセスインターフェース",
+      "required": [
+        "type",
+        "operation",
+        "entity_ref"
+      ],
+      "properties": {
+        "type": {
+          "const": "database-access"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "query",
+            "command",
+            "repository"
+          ],
+          "title": "操作タイプ",
+          "description": "query: 読み取り専用、command: 書き込み、repository: CRUD操作"
+        },
+        "entity_ref": {
+          "type": "string",
+          "title": "エンティティ参照",
+          "description": "system-architecture.data_models.entities[].entity_id への参照"
+        },
+        "methods": {
+          "type": "array",
+          "title": "提供メソッド",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "fileIoInterface": {
+      "type": "object",
+      "title": "ファイル入出力インターフェース",
+      "required": [
+        "type",
+        "operation",
+        "file_format"
+      ],
+      "properties": {
+        "type": {
+          "const": "file-io"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "import",
+            "export",
+            "sync"
+          ],
+          "title": "操作"
+        },
+        "file_format": {
+          "type": "string",
+          "title": "ファイル形式",
+          "description": "CSV、JSON、XML等"
+        },
+        "schema": {
+          "type": [
+            "object",
+            "boolean"
+          ],
+          "title": "ファイルスキーマ",
+          "description": "ファイルを読み取った後の論理データ構造。CSV の行や XML の要素を JSON のデータモデルへ対応付ける方法は利用側で定める。JSON Schema Draft 7 で型を直接記述する。",
+          "allOf": [
+            {
+              "$ref": "common-definitions-schema.json#/definitions/jsonSchema"
+            }
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "libraryApiInterface": {
+      "type": "object",
+      "title": "ライブラリAPIインターフェース",
+      "required": [
+        "type",
+        "api_type",
+        "exports"
+      ],
+      "properties": {
+        "type": {
+          "const": "library-api"
+        },
+        "api_type": {
+          "type": "string",
+          "enum": [
+            "class",
+            "function",
+            "constant",
+            "type",
+            "module"
+          ],
+          "title": "APIタイプ"
+        },
+        "exports": {
+          "type": "array",
+          "title": "エクスポート定義",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "kind"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "名前"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "class",
+                  "function",
+                  "constant",
+                  "type",
+                  "interface"
+                ],
+                "title": "種別"
+              },
+              "signature": {
+                "type": "string",
+                "title": "シグネチャ",
+                "description": "関数やメソッドの場合の型シグネチャ"
+              },
+              "description": {
+                "type": "string",
+                "title": "説明"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "architecture": {
+      "type": "object",
+      "title": "アーキテクチャ",
+      "description": "システムの基本構造",
+      "required": [
+        "key_components",
+        "design_principles"
+      ],
+      "properties": {
+        "key_components": {
+          "$ref": "#/definitions/keyComponents"
+        },
+        "design_principles": {
+          "type": "array",
+          "title": "設計原則",
+          "description": "アーキテクチャ設計の指針。architecture_graphが実際の構造を定義し、これらの原則は理想的な方向性を示す。現実的な制約により例外は許容される",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "keyComponents": {
+      "type": "object",
+      "title": "主要コンポーネント構成",
+      "description": "システムの全体構造定義。AI Agentが大規模システム開発時に「現在どの部分を開発しているか」を常に把握できるナビゲーションマップとして機能",
+      "required": [
+        "components",
+        "architecture_graph"
+      ],
+      "properties": {
+        "components": {
+          "type": "array",
+          "title": "コンポーネント定義",
+          "description": "システムを構成する全コンポーネントの定義。各コンポーネントは一意のIDを持ち、技術スタックを個別に定義",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/componentDefinition"
+          }
+        },
+        "architecture_graph": {
+          "type": "string",
+          "title": "アーキテクチャ構成図",
+          "description": "Mermaid形式のグラフ定義。全ノードはcomponentsに登録済みのcomponent_idを使用すること"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "componentDefinition": {
+      "type": "object",
+      "title": "コンポーネント定義",
+      "required": [
+        "component_id",
+        "name",
+        "type",
+        "tech_stack"
+      ],
+      "properties": {
+        "component_id": {
+          "type": "string",
+          "title": "コンポーネントID",
+          "description": "コンポーネントの一意識別子。MermaidグラフのノードIDと一致させること"
+        },
+        "name": {
+          "type": "string",
+          "title": "コンポーネント名",
+          "description": "コンポーネントの表示名"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "frontend",
+            "backend",
+            "api-gateway",
+            "worker",
+            "database",
+            "cache",
+            "queue",
+            "external",
+            "shared"
+          ],
+          "title": "コンポーネントタイプ",
+          "description": "frontend: ユーザーインターフェース（Web、モバイルアプリ等）, backend: APIサーバー・アプリケーションサーバー, api-gateway: APIゲートウェイ・リバースプロキシ, worker: バックグラウンド処理・バッチ処理, database: データストア, cache: キャッシュストア, queue: メッセージキュー・イベントバス, external: 外部サービス・SaaS, shared: 複数コンポーネントで共有されるコード（ドメインモデル等）"
+        },
+        "purpose": {
+          "type": "string",
+          "title": "目的",
+          "description": "このコンポーネントの役割と責任"
+        },
+        "component_path": {
+          "type": "string",
+          "title": "コンポーネントパス",
+          "description": "コンポーネントのルートディレクトリ。プロジェクトルートからの相対パス（例：'frontend-web'、'backend-api'）"
+        },
+        "tech_stack": {
+          "$ref": "#/definitions/componentTechStack"
+        },
+        "scaling_requirements": {
+          "type": "object",
+          "title": "スケーリング要件",
+          "properties": {
+            "scalability": {
+              "type": "string",
+              "enum": [
+                "horizontal",
+                "vertical",
+                "both",
+                "none"
+              ],
+              "description": "スケーリング方式。horizontal: 水平スケーリング（インスタンス数増加）、vertical: 垂直スケーリング（リソース増強）、both: 両方可能、none: スケーリング不要"
+            },
+            "expected_load": {
+              "type": "string",
+              "description": "想定負荷の説明（例：'1000req/sec'、'100万ユーザー'、'10TB/月のデータ処理'）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "modules": {
+          "type": "array",
+          "title": "モジュール構成",
+          "description": "このコンポーネント内のモジュール分割。空配列の場合はモジュール分割なし（データベース等）",
+          "items": {
+            "$ref": "#/definitions/moduleDefinition"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "componentTechStack": {
+      "type": "object",
+      "title": "コンポーネント技術スタック",
+      "description": "個々のコンポーネントで使用する技術要素",
+      "properties": {
+        "language": {
+          "$ref": "#/definitions/language"
+        },
+        "framework": {
+          "$ref": "#/definitions/framework"
+        },
+        "database": {
+          "$ref": "#/definitions/database"
+        },
+        "runtime": {
+          "type": "string",
+          "title": "ランタイム環境",
+          "description": "Node.js、JVM、.NET Core等"
+        },
+        "libraries": {
+          "type": "array",
+          "title": "主要ライブラリ",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "ライブラリ名"
+              },
+              "version": {
+                "type": "string",
+                "description": "バージョン指定（例：'^1.0.0'、'~2.3.0'、'3.1.4'）"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "このライブラリを使用する目的"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "deployment": {
+          "type": "object",
+          "title": "デプロイメント設定",
+          "properties": {
+            "containerized": {
+              "type": "boolean",
+              "description": "コンテナ化されているかどうか"
+            },
+            "platform": {
+              "type": "string",
+              "description": "デプロイメントプラットフォーム（K8s、ECS、Lambda、Cloud Run、Heroku等）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "techStack": {
+      "type": "object",
+      "title": "技術スタック",
+      "description": "プロジェクト全体で共通使用する開発ツールと品質基準",
+      "properties": {
+        "development_tools": {
+          "type": "object",
+          "title": "開発ツール",
+          "description": "プロジェクト全体で使用するツール",
+          "properties": {
+            "version_control": {
+              "type": "object",
+              "properties": {
+                "system": {
+                  "type": "string",
+                  "description": "バージョン管理システムの種類（git、svn等）"
+                },
+                "platform": {
+                  "type": "string",
+                  "description": "ホスティングプラットフォーム（GitHub、GitLab、Bitbucket等）"
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            },
+            "ci_cd": {
+              "type": "object",
+              "properties": {
+                "platform": {
+                  "type": "string",
+                  "description": "CI/CDプラットフォーム（GitHub Actions、Jenkins、CircleCI等）"
+                },
+                "build_tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            },
+            "code_quality": {
+              "type": "object",
+              "properties": {
+                "linters": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "formatters": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "static_analysis": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            },
+            "testing": {
+              "type": "object",
+              "properties": {
+                "test_frameworks": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "coverage_tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "coverage_targets": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "integration": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "e2e": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "patternProperties": {
+                    "^x-": {}
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            },
+            "documentation": {
+              "type": "object",
+              "properties": {
+                "api_docs": {
+                  "type": "string",
+                  "description": "API仕様書の形式（OpenAPI/Swagger、GraphQL Schema等）"
+                },
+                "code_docs": {
+                  "type": "string",
+                  "description": "コードドキュメントの形式（JSDoc、JavaDoc、Sphinx等）"
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "dependency_management": {
+          "type": "object",
+          "title": "依存関係管理",
+          "properties": {
+            "update_policy": {
+              "type": "string",
+              "enum": [
+                "conservative",
+                "moderate",
+                "aggressive"
+              ],
+              "description": "依存関係の更新方針。conservative: 安定版のみ使用、moderate: マイナーバージョンまで自動更新、aggressive: 最新版を積極的に採用"
+            },
+            "security_scanning": {
+              "type": "boolean",
+              "description": "セキュリティ脆弱性の自動スキャン有効化"
+            },
+            "license_check": {
+              "type": "boolean",
+              "description": "ライセンス互換性の自動チェック有効化"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "language": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "言語名"
+        },
+        "version": {
+          "type": "string",
+          "title": "バージョン"
+        },
+        "purpose": {
+          "type": "string",
+          "title": "用途",
+          "description": "この言語を使用する目的"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "framework": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "language"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "フレームワーク名"
+        },
+        "version": {
+          "type": "string",
+          "title": "バージョン"
+        },
+        "language": {
+          "type": "string",
+          "title": "対象言語"
+        },
+        "purpose": {
+          "type": "string",
+          "title": "用途"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "database": {
+      "type": "object",
+      "required": [
+        "type",
+        "name"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "relational",
+            "document",
+            "key-value",
+            "graph",
+            "time-series"
+          ],
+          "title": "データベース種別"
+        },
+        "name": {
+          "type": "string",
+          "title": "製品名"
+        },
+        "version": {
+          "type": "string",
+          "title": "バージョン"
+        },
+        "purpose": {
+          "type": "string",
+          "title": "用途"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "dataModels": {
+      "type": "object",
+      "title": "データモデル",
+      "description": "functional-requirements のdata_modelsに対する技術実装仕様。AI Agentがデータ永続化層を実装するための物理設計情報",
+      "required": [
+        "entities"
+      ],
+      "properties": {
+        "entities": {
+          "type": "array",
+          "title": "エンティティ定義",
+          "description": "データエンティティの技術仕様",
+          "items": {
+            "$ref": "#/definitions/dataEntity"
+          }
+        },
+        "implementation_notes": {
+          "type": "array",
+          "title": "実装ノート",
+          "description": "AI Agentへのデータ層実装に関する追加指示",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "dataEntity": {
+      "type": "object",
+      "required": [
+        "entity_id",
+        "data_id",
+        "component_id",
+        "table_name",
+        "columns"
+      ],
+      "properties": {
+        "entity_id": {
+          "type": "string",
+          "title": "エンティティID",
+          "description": "エンティティの一意識別子"
+        },
+        "data_id": {
+          "type": "string",
+          "title": "機能要件データ参照",
+          "description": "functional-requirements.data_models.data_idへの参照"
+        },
+        "component_id": {
+          "type": "string",
+          "title": "コンポーネントID",
+          "description": "このエンティティを格納するデータベースコンポーネントのID（key_components.components.component_idへの参照）"
+        },
+        "table_name": {
+          "type": "string",
+          "title": "物理テーブル名",
+          "description": "実際のDBテーブル名"
+        },
+        "schema_name": {
+          "type": "string",
+          "title": "スキーマ名",
+          "description": "データベーススキーマ名（オプション）"
+        },
+        "columns": {
+          "type": "array",
+          "title": "カラム定義",
+          "description": "物理カラムと機能要件の属性のマッピング",
+          "items": {
+            "$ref": "#/definitions/columnMapping"
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "title": "テーブル制約",
+          "properties": {
+            "primary_key": {
+              "type": "array",
+              "title": "主キー",
+              "items": {
+                "type": "string"
+              },
+              "description": "主キーカラム名のリスト"
+            },
+            "unique_constraints": {
+              "type": "array",
+              "title": "ユニーク制約",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "制約名",
+                    "description": "ユニーク制約の名前"
+                  },
+                  "columns": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "title": "対象カラム",
+                    "description": "ユニーク制約の対象となるカラム名のリスト"
+                  }
+                },
+                "patternProperties": {
+                  "^x-": {}
+                },
+                "additionalProperties": false
+              }
+            },
+            "foreign_keys": {
+              "type": "array",
+              "title": "外部キー",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "制約名",
+                    "description": "外部キー制約の名前"
+                  },
+                  "column": {
+                    "type": "string",
+                    "title": "カラム名",
+                    "description": "外部キーとなるカラム名"
+                  },
+                  "references": {
+                    "type": "object",
+                    "title": "参照先",
+                    "properties": {
+                      "entity_id": {
+                        "type": "string",
+                        "title": "参照先エンティティID",
+                        "description": "参照先のentity_id"
+                      },
+                      "column": {
+                        "type": "string",
+                        "title": "参照先カラム名",
+                        "description": "参照先テーブルのカラム名"
+                      }
+                    },
+                    "patternProperties": {
+                      "^x-": {}
+                    },
+                    "additionalProperties": false
+                  },
+                  "on_delete": {
+                    "type": "string",
+                    "enum": [
+                      "CASCADE",
+                      "SET NULL",
+                      "RESTRICT"
+                    ],
+                    "title": "削除時動作",
+                    "description": "参照先レコード削除時の動作。CASCADE: 連鎖削除、SET NULL: NULL設定、RESTRICT: 削除禁止"
+                  }
+                },
+                "patternProperties": {
+                  "^x-": {}
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "indexes": {
+          "type": "array",
+          "title": "インデックス",
+          "description": "パフォーマンス最適化のための基本的なインデックス定義",
+          "items": {
+            "$ref": "#/definitions/dbIndex"
+          }
+        },
+        "partitioning": {
+          "type": "object",
+          "title": "パーティショニング",
+          "description": "大規模データの場合のみ事前定義",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "range",
+                "hash",
+                "list"
+              ],
+              "title": "分割戦略"
+            },
+            "key": {
+              "type": "string",
+              "title": "パーティションキー"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "implementation_hints": {
+          "type": "object",
+          "title": "実装ヒント",
+          "description": "AI Agentへの追加指示（詳細な最適化は開発中に決定）",
+          "properties": {
+            "expected_volume": {
+              "type": "string",
+              "title": "想定データ量",
+              "description": "想定データ量の目安（例：'初期100万件、月10万件増加'、'1レコード1KB、総容量10GB'）"
+            },
+            "access_patterns": {
+              "type": "array",
+              "title": "アクセスパターン",
+              "items": {
+                "type": "string"
+              },
+              "description": "主なアクセスパターン（例：'IDによる単一検索が90%'、'日付範囲での集計が主'、'全件スキャンは夜間バッチのみ'）"
+            },
+            "performance_critical": {
+              "type": "boolean",
+              "title": "パフォーマンスクリティカル",
+              "description": "パフォーマンスクリティカルなテーブルかどうか。trueの場合、AI Agentは特に慎重に最適化を検討"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "columnMapping": {
+      "type": "object",
+      "title": "カラムマッピング",
+      "required": [
+        "attribute_name",
+        "column_name"
+      ],
+      "properties": {
+        "attribute_name": {
+          "type": "string",
+          "title": "属性名",
+          "description": "functional-requirements.data_models.attributes.nameへの参照"
+        },
+        "column_name": {
+          "type": "string",
+          "title": "物理カラム名",
+          "description": "データベースの実際のカラム名"
+        },
+        "data_type_override": {
+          "type": "string",
+          "title": "データ型オーバーライド",
+          "description": "DBMSごとの具体的なデータ型（例：VARCHAR(255)、DECIMAL(10,2)）"
+        },
+        "additional_constraints": {
+          "type": "array",
+          "title": "追加制約",
+          "description": "技術的な追加制約（CHECK制約など）",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "dbIndex": {
+      "type": "object",
+      "required": [
+        "columns"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "インデックス名"
+        },
+        "columns": {
+          "type": "array",
+          "title": "対象カラム",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "btree",
+            "hash",
+            "gin",
+            "gist",
+            "spatial"
+          ],
+          "title": "インデックスタイプ",
+          "default": "btree"
+        },
+        "unique": {
+          "type": "boolean",
+          "title": "ユニーク制約",
+          "default": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "moduleDefinition": {
+      "type": "object",
+      "title": "モジュール定義",
+      "required": [
+        "module_id",
+        "name",
+        "layer",
+        "module_relative_path"
+      ],
+      "properties": {
+        "module_id": {
+          "type": "string",
+          "title": "モジュールID",
+          "description": "モジュールの識別子。同一コンポーネント内で一意"
+        },
+        "name": {
+          "type": "string",
+          "title": "モジュール名",
+          "description": "モジュールの表示名。ビジネス的な意味が分かる名前を使用"
+        },
+        "layer": {
+          "type": "string",
+          "enum": [
+            "presentation",
+            "application",
+            "domain",
+            "infrastructure",
+            "shared"
+          ],
+          "title": "レイヤー",
+          "description": "レイヤードアーキテクチャにおける位置。presentation: UI/API層、application: ユースケース層、domain: ビジネスロジック層、infrastructure: 技術詳細層、shared: 共通ユーティリティ層"
+        },
+        "purpose": {
+          "type": "string",
+          "title": "目的",
+          "description": "モジュールの責任範囲と役割の詳細説明"
+        },
+        "module_relative_path": {
+          "type": "string",
+          "title": "モジュール相対パス",
+          "description": "コンポーネントルートからの相対パス（例：'src/modules/auth'、'src/main/java/com/example/auth'）"
+        },
+        "functional_requirements": {
+          "type": "array",
+          "title": "実装する機能要件",
+          "description": "このモジュールが実装するfunctional-requirements.requirements.req_idのリスト。AI Agentはこのリストを元に実装すべき機能を把握",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provided_interfaces": {
+          "type": "array",
+          "title": "提供インターフェース",
+          "description": "このモジュールが提供する詳細なインターフェース定義",
+          "items": {
+            "$ref": "#/definitions/interfaceContract"
+          }
+        },
+        "consumed_interfaces": {
+          "type": "array",
+          "title": "利用インターフェース",
+          "description": "このモジュールが利用する他モジュールのインターフェース参照",
+          "items": {
+            "type": "object",
+            "required": [
+              "component_id",
+              "module_id",
+              "interface_id"
+            ],
+            "properties": {
+              "component_id": {
+                "type": "string",
+                "description": "提供元コンポーネントID"
+              },
+              "module_id": {
+                "type": "string",
+                "description": "提供元モジュールID"
+              },
+              "interface_id": {
+                "type": "string",
+                "description": "利用するインターフェースID"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "nfr_references": {
+          "type": "array",
+          "title": "適用される非機能要件",
+          "description": "このモジュールに適用される non-functional-requirements.list[].req_id のリスト。NFR 側の traceability.modules との双方向参照",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "$ref": "common-definitions-schema.json#/definitions/status"
+        },
+        "depends_on": {
+          "$ref": "common-definitions-schema.json#/definitions/dependsOn"
+        },
+        "blocks": {
+          "$ref": "common-definitions-schema.json#/definitions/blocks"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "commonTechnicalPolicies": {
+      "type": "object",
+      "title": "共通技術方針",
+      "description": "システム全体で統一的に適用される技術実装方針（横断的関心事）。すべてのモジュール・コンポーネントで遵守すべき共通ルール",
+      "properties": {
+        "security": {
+          "$ref": "#/definitions/securityPolicies"
+        },
+        "performance": {
+          "$ref": "#/definitions/performancePolicies"
+        },
+        "logging": {
+          "$ref": "#/definitions/loggingPolicies"
+        },
+        "error_handling": {
+          "$ref": "#/definitions/errorHandlingPolicies"
+        },
+        "transaction_management": {
+          "$ref": "#/definitions/transactionPolicies"
+        },
+        "validation": {
+          "$ref": "#/definitions/validationPolicies"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "securityPolicies": {
+      "type": "object",
+      "title": "セキュリティ方針",
+      "description": "システム全体に適用されるセキュリティ実装方針",
+      "properties": {
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "認証プロバイダー（Auth0、AWS Cognito、Firebase Auth、Keycloak、Custom等）"
+            },
+            "token_type": {
+              "type": "string",
+              "enum": [
+                "JWT",
+                "OAuth2",
+                "SAML"
+              ],
+              "description": "認証トークンの種類。JWT: JSON Web Token、OAuth2: OAuth 2.0、SAML: Security Assertion Markup Language"
+            },
+            "session_management": {
+              "type": "object",
+              "properties": {
+                "storage": {
+                  "type": "string",
+                  "enum": [
+                    "redis",
+                    "in-memory",
+                    "database"
+                  ],
+                  "description": "セッションストレージの種類。redis: Redis使用、in-memory: メモリ内保存、database: DBに永続化"
+                },
+                "expiry_seconds": {
+                  "type": "number",
+                  "description": "セッションの有効期限（秒）"
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "authorization": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": [
+                "RBAC",
+                "ABAC",
+                "ReBAC"
+              ],
+              "description": "認可モデル。RBAC: Role-Based Access Control、ABAC: Attribute-Based Access Control、ReBAC: Relationship-Based Access Control"
+            },
+            "default_policies": {
+              "type": "array",
+              "description": "デフォルトのアクセス制御ポリシー",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "encryption": {
+          "type": "object",
+          "properties": {
+            "at_rest": {
+              "type": "object",
+              "properties": {
+                "algorithm": {
+                  "type": "string",
+                  "description": "暗号化アルゴリズム（例：AES-256、RSA-2048）"
+                },
+                "key_management": {
+                  "type": "string",
+                  "enum": [
+                    "AWS-KMS",
+                    "HashiCorp-Vault",
+                    "Local-HSM"
+                  ],
+                  "description": "鍵管理システム。AWS-KMS: AWS Key Management Service、HashiCorp-Vault: Vault、Local-HSM: Hardware Security Module"
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            },
+            "in_transit": {
+              "type": "object",
+              "properties": {
+                "tls_version": {
+                  "type": "string",
+                  "enum": [
+                    "1.2",
+                    "1.3"
+                  ],
+                  "description": "使用するTLSバージョン"
+                },
+                "enforce_https": {
+                  "type": "boolean",
+                  "description": "HTTPS通信の強制"
+                }
+              },
+              "patternProperties": {
+                "^x-": {}
+              },
+              "additionalProperties": false
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "security_headers": {
+          "type": "object",
+          "description": "セキュリティヘッダーの設定",
+          "properties": {
+            "csp": {
+              "type": "string",
+              "description": "Content Security Policyの設定"
+            },
+            "hsts": {
+              "type": "boolean",
+              "description": "HTTP Strict Transport Securityの有効化"
+            },
+            "x_frame_options": {
+              "type": "string",
+              "description": "X-Frame-Optionsヘッダーの値（例：DENY、SAMEORIGIN）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "performancePolicies": {
+      "type": "object",
+      "title": "パフォーマンス方針",
+      "description": "システム全体に適用されるパフォーマンス最適化方針",
+      "properties": {
+        "caching_strategy": {
+          "type": "object",
+          "properties": {
+            "default_ttl": {
+              "type": "number",
+              "description": "デフォルトのキャッシュ有効期限（秒）"
+            },
+            "cache_headers": {
+              "type": "object",
+              "description": "HTTPキャッシュヘッダー名と文字列値の対応（例：Cache-Control: no-store）",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "response_optimization": {
+          "type": "object",
+          "properties": {
+            "compression": {
+              "type": "boolean",
+              "description": "レスポンス圧縮の有効化"
+            },
+            "minification": {
+              "type": "boolean",
+              "description": "リソースの最小化"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "resource_pooling": {
+          "type": "object",
+          "properties": {
+            "connection_pool_size": {
+              "type": "number",
+              "description": "デフォルトのコネクションプールサイズ"
+            },
+            "thread_pool_size": {
+              "type": "number",
+              "description": "スレッドプールサイズ"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "monitoring_thresholds": {
+          "type": "object",
+          "properties": {
+            "response_time_warn_ms": {
+              "type": "number"
+            },
+            "response_time_error_ms": {
+              "type": "number"
+            },
+            "error_rate_threshold": {
+              "type": "number"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "loggingPolicies": {
+      "type": "object",
+      "title": "ロギング方針",
+      "properties": {
+        "structured_logging": {
+          "type": "boolean",
+          "description": "構造化ログ（JSON形式等）の使用"
+        },
+        "log_levels": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "type": "string",
+              "enum": [
+                "debug",
+                "info",
+                "warn",
+                "error"
+              ],
+              "description": "開発環境でのデフォルトログレベル"
+            },
+            "production": {
+              "type": "string",
+              "enum": [
+                "info",
+                "warn",
+                "error"
+              ],
+              "description": "本番環境でのログレベル"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "correlation_id_strategy": {
+          "type": "string",
+          "description": "リクエスト追跡のための相関ID戦略（例：UUID生成、X-Request-IDヘッダー使用）"
+        },
+        "sensitive_data_handling": {
+          "type": "string",
+          "description": "機密データのマスキング方針（例：パスワード、クレジットカード番号、個人情報の扱い）"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "errorHandlingPolicies": {
+      "type": "object",
+      "title": "エラーハンドリング方針",
+      "properties": {
+        "global_error_handler": {
+          "type": "boolean",
+          "description": "グローバルエラーハンドラーの実装有無"
+        },
+        "error_response_format": {
+          "type": [
+            "object",
+            "boolean"
+          ],
+          "description": "統一的なエラーレスポンスのデータ構造（エラーコード、メッセージ、詳細情報など）。JSON Schema Draft 7 で型を直接記述する。",
+          "allOf": [
+            {
+              "$ref": "common-definitions-schema.json#/definitions/jsonSchema"
+            }
+          ]
+        },
+        "error_classification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "description": "エラーカテゴリ（例：validation、business、system）"
+              },
+              "http_status_mapping": {
+                "type": "number",
+                "description": "対応するHTTPステータスコード"
+              },
+              "retry_allowed": {
+                "type": "boolean",
+                "description": "リトライ可能なエラーかどうか"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "transactionPolicies": {
+      "type": "object",
+      "title": "トランザクション管理方針",
+      "properties": {
+        "default_isolation_level": {
+          "type": "string",
+          "enum": [
+            "READ_UNCOMMITTED",
+            "READ_COMMITTED",
+            "REPEATABLE_READ",
+            "SERIALIZABLE"
+          ],
+          "description": "デフォルトのトランザクション分離レベル"
+        },
+        "distributed_transaction_strategy": {
+          "type": "string",
+          "enum": [
+            "2PC",
+            "saga",
+            "eventual-consistency"
+          ],
+          "description": "分散トランザクション戦略。2PC: 2フェーズコミット、saga: Sagaパターン、eventual-consistency: 結果整合性"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "validationPolicies": {
+      "type": "object",
+      "title": "検証方針",
+      "properties": {
+        "validation_library": {
+          "type": "string",
+          "description": "使用する検証ライブラリ"
+        },
+        "validation_timing": {
+          "type": "string",
+          "enum": [
+            "client-side",
+            "server-side",
+            "both"
+          ],
+          "description": "検証実行タイミング。client-side: クライアント側のみ、server-side: サーバー側のみ、both: 両方で実行"
+        },
+        "custom_validators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "バリデーター名"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "バリデーターの用途"
+              },
+              "implementation_hint": {
+                "type": "string",
+                "description": "実装のヒント"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "deploymentStrategy": {
+      "type": "object",
+      "title": "デプロイ戦略",
+      "description": "デプロイメントの基本方針",
+      "properties": {
+        "environments": {
+          "type": "array",
+          "title": "環境構成",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "環境名（例：dev、stg、prod）"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "development",
+                  "staging",
+                  "production"
+                ],
+                "description": "環境タイプ"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "環境の用途（例：開発、テスト、本番）"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "deployment_method": {
+          "type": "string",
+          "enum": [
+            "blue-green",
+            "canary",
+            "rolling",
+            "recreate"
+          ],
+          "title": "デプロイ方式"
+        },
+        "infrastructure_as_code": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "enum": [
+                "terraform",
+                "cloudformation",
+                "pulumi",
+                "cdk"
+              ],
+              "description": "Infrastructure as Codeツール"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "containerization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "コンテナ化の有効化"
+            },
+            "registry": {
+              "type": "string",
+              "description": "コンテナレジストリのURL（Docker Hub、ECR、GCR等）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "developmentPrinciples": {
+      "type": "object",
+      "title": "開発原則",
+      "description": "開発プロセスの基本方針",
+      "properties": {
+        "milestone_strategy": {
+          "type": "object",
+          "title": "マイルストーン戦略",
+          "properties": {
+            "approach": {
+              "type": "string",
+              "enum": [
+                "iterative",
+                "incremental",
+                "big-bang"
+              ],
+              "description": "開発アプローチ。iterative: 反復型、incremental: 増分型、big-bang: 一括リリース型"
+            },
+            "milestone_duration": {
+              "type": "string",
+              "description": "標準的なマイルストーン期間（例：'2週間'、'1ヶ月'、'3スプリント'）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "quality_gates": {
+          "type": "object",
+          "title": "品質ゲート方針",
+          "properties": {
+            "mandatory_gates": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "必須の品質ゲート（例：'単体テスト通過'、'コードレビュー承認'、'セキュリティスキャン合格'）"
+            },
+            "automation_level": {
+              "type": "string",
+              "enum": [
+                "full",
+                "partial",
+                "manual"
+              ],
+              "description": "自動化レベル。full: 完全自動化、partial: 部分的自動化、manual: 手動確認"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "review_process": {
+          "type": "object",
+          "title": "レビュープロセス",
+          "properties": {
+            "code_review_required": {
+              "type": "boolean",
+              "description": "コードレビューの必須化"
+            },
+            "architecture_review_triggers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "アーキテクチャレビューのトリガー条件（例：'新規コンポーネント追加'、'外部API統合'、'データモデル変更'）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        },
+        "parallel_development": {
+          "type": "object",
+          "title": "並列開発方針",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "feature-branch",
+                "trunk-based",
+                "git-flow"
+              ],
+              "description": "ブランチ戦略。feature-branch: 機能ブランチ、trunk-based: トランクベース開発、git-flow: Git Flow"
+            },
+            "integration_frequency": {
+              "type": "string",
+              "description": "統合頻度（例：'1日複数回'、'デイリー'、'週次'）"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-docs": {
+    "definition": [
+      "## 1. システムアーキテクチャとは",
+      "",
+      "### 1.1 定義と目的",
+      "system-architectureは、開発開始前に決定すべき技術基盤と設計方針を定義する。これらは後から変更すると影響が大きい基盤部分であり、プロジェクト全体の技術的な方向性を決定する。",
+      "",
+      "### 1.2 本質的な価値",
+      "- **技術基盤の確立**: プロジェクト全体の技術的な土台を提供",
+      "- **開発効率の向上**: 明確な方針により迷いのない開発を実現",
+      "- **品質の保証**: 横断的関心事の統一により一貫した品質を確保",
+      "- **変更リスクの低減**: 早期の決定により後戻りコストを最小化",
+      "- **AI Agent開発支援**: 大規模システムでもAI Agentが自律的に開発できる構造を提供",
+      "- **開発単位の明確化**: モジュール単位での開発タスクと依存関係を定義",
+      "",
+      "### 1.3 他のスキーマとの関係",
+      "```",
+      "functional-requirements（ビジネス要件）",
+      "    ↓ 技術基盤の提供",
+      "system-architecture（技術基盤・設計方針・開発単位）",
+      "    ↓ 補足情報の提供",
+      "development-implementation（マイルストーン・デプロイ詳細）",
+      "```",
+      "system-architectureは、機能要件を技術的に実現するための安定した基盤を提供し、モジュール単位での開発作業を定義する。development-implementationは補足的な情報のみを扱う。",
+      "",
+      "### 1.4 モジュールのステータスと依存関係",
+      "モジュール定義（moduleDefinition）には以下のフィールドが用意されている：",
+      "- **`status`**: 共通定義の11段階ステータス（draft → verified）。モジュール実装の進捗をトラッキング",
+      "- **`depends_on`**: 他モジュールや外部サービスへの依存。文字列IDまたは型付きオブジェクト（ref_id + ref_type + dependency_type）",
+      "- **`blocks`**: 逆依存（`depends_on` から導出。文書への保存は利用側で行う）",
+      "- **`nfr_references`**: このモジュールに適用される非機能要件IDリスト。non-functional-requirements.list[].traceability.modules との双方向参照を実現",
+      "",
+      "これによりモジュール間の依存グラフが明示され、AIエージェントがビルド順序やパラレル実装可能範囲を自動判定できる。"
+    ],
+    "examples": [
+      "## 5. 記述例",
+      "部分抽出のパスは配置例。既存要素に追記する例では、配列の添字を対象文書に合わせる。",
+      "",
+      "### 5.1 design_principlesの例",
+      "設計原則にアーキテクチャパターンを含めた記述例：",
+      "",
+      "```markdown",
+      "<!--@srs: system-architecture: architecture: design_principles",
+      "- \"マイクロサービスアーキテクチャを基本とするが、初期段階ではモジュラーモノリスから開始\"",
+      "- \"イベント駆動アーキテクチャを採用し、サービス間の疎結合を実現\"",
+      "- \"レイヤードアーキテクチャで責任を明確に分離\"",
+      "- \"ヘキサゴナルアーキテクチャによりビジネスロジックを保護\"",
+      "- \"各サービスは単一責任の原則に従い、明確な境界を持つ\"",
+      "- \"データの一貫性よりも可用性を優先（最終的整合性）\"",
+      "- \"障害の局所化のため、サーキットブレーカーパターンを適用\"",
+      "@srs-->",
+      "```",
+      "",
+      "これらの原則は理想的な方向性を示すが、architecture_graphで定義される実際の構造が優先される。",
+      "",
+      "### 5.2 リクエストの型定義",
+      "",
+      "以下は HTTP API の `definition` に記述する例。外側のインターフェース契約には `interface_id`、`version`、`interface_type: http-api` を指定する。",
+      "",
+      "```yaml",
+      "type: http-api",
+      "path: /items",
+      "method: POST",
+      "headers:",
+      "  Content-Type: application/json",
+      "request_schema:",
+      "  type: object",
+      "  properties:",
+      "    name:",
+      "      type: string",
+      "    quantity:",
+      "      type: integer",
+      "      minimum: 1",
+      "  required: [name, quantity]",
+      "  additionalProperties: false",
+      "response_schema:",
+      "  type: object",
+      "  properties:",
+      "    id:",
+      "      type: string",
+      "  required: [id]",
+      "```"
+    ],
+    "ai_collaboration": [
+      "## 4. AI Agentとの協調",
+      "",
+      "### 4.1 key_componentsとmodule_structureの使い分け",
+      "",
+      "**key_componentsの使い方**",
+      "AI Agentはkey_componentsを「システム全体地図」として使用：",
+      "1. **全体把握**: architecture_graphでシステム全体の構成を理解",
+      "2. **技術選択**: 各コンポーネントのtech_stackを確認",
+      "3. **デプロイ境界**: どの機能がどのコンポーネントで動作するか把握",
+      "",
+      "**module_structureの使い方**",
+      "AI Agentは各コンポーネントの`modules`配列を「開発作業の単位」として使用：",
+      "1. **並列開発**: 依存関係のないモジュールを並列で開発",
+      "2. **責任範囲**: 各モジュールが実装すべき機能要件を確認",
+      "3. **インターフェース**: 公開すべき関数やクラスを把握",
+      "",
+      "### 4.2 実際の開発フロー",
+      "",
+      "**ステップ1：開発対象の特定**",
+      "```",
+      "例：「user-registration機能を実装せよ」",
+      "1. functional-requirements で req_id: \"user-registration\" を確認",
+      "2. 全コンポーネントのmodulesを走査し、functional_requirements に \"user-registration\" を含むモジュールを検索",
+      "3. 該当モジュール（例：api-application）を含むコンポーネント（例：backend-api）を特定",
+      "4. そのコンポーネントの技術スタックを確認",
+      "```",
+      "",
+      "**ステップ2：依存関係の確認**",
+      "```",
+      "1. 開発対象モジュールの depends_on と consumed_interfaces を確認",
+      "2. 依存先モジュールの provided_interfaces を確認",
+      "3. 異なるコンポーネントの場合、公開APIのみ使用可能",
+      "```",
+      "",
+      "**ステップ3：並列開発の判断**",
+      "計画を担当するエージェントは、依存先の状態・契約を確認して並行作業の可否を判断する：",
+      "- 相互に依存関係がないモジュール",
+      "- 異なるコンポーネント間でも依存条件と共有資源の競合を満たすモジュール",
+      "- 同一コンポーネント内でも異なるレイヤーのモジュール（下位層が実装済みの場合）",
+      "",
+      "**ステップ4：開発タスクの実行**",
+      "開発を担当するエージェントは各モジュールを一つの開発単位として：",
+      "1. provided_interfacesの実装",
+      "2. consumed_interfacesのモック利用",
+      "3. functional_requirementsの実現",
+      "4. コンポーネントの component_path とモジュールの module_relative_path で指定した場所へのコード生成"
+    ],
+    "components": [
+      "## 2. 主要コンポーネント",
+      "",
+      "### 2.1 技術基盤コンポーネント",
+      "**アーキテクチャ（architecture）**",
+      "- 主要コンポーネント構成（key_components）：",
+      "  - 各コンポーネントの一意ID、名称、タイプ、技術スタック",
+      "  - Mermaid形式のアーキテクチャ図（AI Agentの「ナビゲーションマップ」）",
+      "- 設計原則（design_principles）：",
+      "  - アーキテクチャパターンの方針（マイクロサービス、モノリシック等）",
+      "  - 理想的な設計方向性を示すが、architecture_graphの実装を優先",
+      "  - 現実的な制約による例外を許容",
+      "",
+      "**技術スタック（tech_stack）**",
+      "- プロジェクト全体の開発ツール（VCS、CI/CD、品質管理）",
+      "- テストフレームワークとカバレッジ目標",
+      "- ドキュメント生成ツール",
+      "- 依存関係管理ポリシー",
+      "",
+      "**データモデル（data_models）**",
+      "- functional-requirements のデータ定義に対する物理実装仕様",
+      "- テーブル設計、インデックス戦略",
+      "- パーティショニング、キャッシュ戦略",
+      "- リレーション実装とフェッチ戦略",
+      "",
+      "### 2.2 構造定義コンポーネント",
+      "**コンポーネント内モジュール構造**",
+      "- 各コンポーネントの`modules`配列で定義",
+      "- コンポーネントとモジュールの関係:",
+      "  - コンポーネント：デプロイ単位、技術スタックの境界",
+      "  - モジュール：開発単位、責任範囲の境界",
+      "- レイヤー構造（presentation/application/domain/infrastructure/shared）",
+      "- モジュール間の依存関係は`depends_on` 配列で表現",
+      "- 各モジュールが実装する機能要件の明確化",
+      "",
+      "### 2.3 方針定義コンポーネント",
+      "**共通技術方針（common_technical_policies）**",
+      "- セキュリティ：認証・認可、暗号化、セキュリティヘッダー",
+      "- パフォーマンス：キャッシュ、リソースプーリング、監視閾値",
+      "- ロギング：構造化ログ、ログレベル、相関ID戦略",
+      "- エラーハンドリング：統一的なエラー処理方式",
+      "- トランザクション管理：分離レベル、分散トランザクション戦略",
+      "- 検証：バリデーションライブラリ、タイミング",
+      "",
+      "**デプロイ戦略（deployment_strategy）**",
+      "- 環境構成（開発、ステージング、本番）",
+      "- デプロイ方式（Blue-Green、カナリア等）",
+      "- Infrastructure as Codeツール",
+      "- コンテナ化の方針",
+      "",
+      "**開発原則（development_principles）**",
+      "- マイルストーン戦略",
+      "- 品質ゲートの設定",
+      "- レビュープロセス",
+      "- 並列開発の方針",
+      "",
+      "### 2.4 利用者が定義するデータ型",
+      "",
+      "`request_schema`、`response_schema`、`payload_schema`、`message_schema`、ファイル入出力の `schema`、`error_response_format` は、JSON Schema Draft 7 でデータ型を直接記述する欄である。フィールド名、型、必須項目、配列要素などを利用者が定義する。",
+      "",
+      "共通定義は固定の Draft 7 メタスキーマを参照する。core は AJV に同梱されたメタスキーマを使用し、検証時に外部スキーマを取得しない。`$schema` を記載する場合も Draft 7 を指定する。",
+      "",
+      "- メタスキーマは標準キーワードの値の型や構造を検証する。実際のリクエストやレスポンスを、その型定義に適合するか検証する処理は利用側で行う。",
+      "- `{{}}` と `true` は任意の値を許可し、`false` はすべての値を拒否する型定義として有効。",
+      "- 未知のキーワードはデータに保持し、core は警告で知らせる。`x-*` は拡張注釈として保持し、未知キーワードの警告対象にしない。拡張注釈を追加しても、新しい検証規則としては実行されない。",
+      "- 型定義中の `$ref` は参照文字列として保持する。参照先の解決・存在・適合性はこの検証では確認せず、その旨を警告する。参照を利用するアプリケーションが解決と検証を行う。",
+      "- フォームで型定義を編集する場合は、利用側で JSON／YAML 編集部品などを用意する。メタスキーマを指定するだけで型定義の編集 UI が自動生成されるわけではない。",
+      "",
+      "`headers` と `cache_headers` はヘッダー名から文字列値へのマップである。型定義を格納する欄とは区別する。",
+      "",
+      "### 2.5 インターフェース種別の一致",
+      "",
+      "`interfaceContract.interface_type` と `definition.type` は必ず一致する。例えば、`interface_type: http-api` と `definition.type: grpc` の組み合わせは Schema 検証エラーとなる。"
+    ],
+    "process": [
+      "## 3. 決定プロセス",
+      "",
+      "### 3.1 プロジェクト開始時の決定事項",
+      "**ステップ1：基本アーキテクチャの選定**",
+      "1. ビジネス要件の特性を分析",
+      "2. 非機能要件（スケーラビリティ、可用性等）を考慮",
+      "3. 設計原則を策定（理想的なアーキテクチャパターンを含む）",
+      "4. 主要コンポーネントを識別し、key_componentsとして定義",
+      "5. architecture_graphで実際の構造を表現（原則からの逸脱も許容）",
+      "",
+      "**ステップ2：技術スタックの選定**",
+      "1. 開発チームのスキルセットを考慮",
+      "2. エコシステムの成熟度を評価",
+      "3. ライセンスとコストを検討",
+      "4. 言語、フレームワーク、DBを決定",
+      "",
+      "**ステップ3：共通方針の策定**",
+      "1. セキュリティ要件から認証・認可方式を決定",
+      "2. パフォーマンス目標からキャッシュ戦略を決定",
+      "3. 運用要件からロギング・監視方針を決定",
+      "4. 開発プロセスと品質基準を定義",
+      "",
+      "### 3.2 要件定義後の詳細化",
+      "**ステップ4：データモデルの物理設計**",
+      "1. functional-requirements のデータモデルを分析",
+      "2. 物理テーブル設計とカラムマッピング",
+      "3. インデックス戦略の決定",
+      "4. パーティショニングとアーカイブ方針",
+      "",
+      "**ステップ5：モジュール分割の確定**",
+      "1. 機能要件からモジュール境界を識別",
+      "2. 各モジュールの責任範囲を明確化",
+      "3. 各コンポーネント内でモジュール構造を設計：",
+      "   - レイヤー構造の決定",
+      "   - モジュールごとに実装する機能要件を割り当て",
+      "   - モジュール間の依存関係を定義",
+      "4. 公開インターフェースの概要を決定",
+      "",
+      "### 3.3 継続的な見直しプロセス",
+      "**定期レビュー**",
+      "- 四半期ごとの技術スタック見直し",
+      "- セキュリティポリシーの更新",
+      "- パフォーマンスチューニング結果の反映",
+      "",
+      "**変更管理**",
+      "- アーキテクチャ決定記録（ADR）の作成",
+      "- 影響分析の実施",
+      "- 段階的な移行計画の策定"
+    ]
+  },
+  "patternProperties": {
+    "^x-": {}
+  },
+  "additionalProperties": false
+}

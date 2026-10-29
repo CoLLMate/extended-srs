@@ -1,0 +1,84 @@
+{
+  "en": {
+    "SRS_REQUIRED_FIELD": "Missing required property \"{{field}}\"",
+    "SRS_REQUIRED_MANIFEST": "Manifest section is required",
+    "SRS_REQUIRED_FORMAT": "Format field is required in manifest",
+    "SRS_REQUIRED_VERSION": "Version field is required in manifest",
+
+    "SRS_TYPE_MISMATCH": "Type mismatch for \"{{field}}\"",
+    "SRS_TYPE_STRING_EXPECTED": "\"{{field}}\" must be a string",
+    "SRS_TYPE_NUMBER_EXPECTED": "\"{{field}}\" must be a number",
+    "SRS_TYPE_BOOLEAN_EXPECTED": "\"{{field}}\" must be a boolean",
+    "SRS_TYPE_OBJECT_EXPECTED": "\"{{field}}\" must be an object",
+    "SRS_TYPE_ARRAY_EXPECTED": "\"{{field}}\" must be an array",
+
+    "SRS_FORMAT_INVALID": "Invalid format for \"{{field}}\"",
+    "SRS_FORMAT_DATE_INVALID": "\"{{field}}\" must be a valid date",
+    "SRS_FORMAT_EMAIL_INVALID": "\"{{field}}\" must be a valid email address",
+    "SRS_FORMAT_URL_INVALID": "\"{{field}}\" must be a valid URL",
+    "SRS_FORMAT_UUID_INVALID": "\"{{field}}\" must be a valid UUID",
+
+    "SRS_ENUM_INVALID": "\"{{field}}\" must be one of: {{allowedValues}}",
+    "SRS_PATTERN_INVALID": "\"{{field}}\" doesn't match required pattern",
+    "SRS_MIN_LENGTH": "\"{{field}}\" must be at least {{limit}} characters",
+    "SRS_MAX_LENGTH": "\"{{field}}\" must be at most {{limit}} characters",
+    "SRS_MINIMUM_VALUE": "\"{{field}}\" must be at least {{limit}}",
+    "SRS_MAXIMUM_VALUE": "\"{{field}}\" must be at most {{limit}}",
+
+    "SRS_ADDITIONAL_PROPERTY": "\"{{field}}\" is not defined in the schema",
+    "SRS_INVALID_SCHEMA": "Invalid schema structure",
+
+    "SRS_MANIFEST_FORMAT_INVALID": "Manifest format must be \"extended-srs/v1\"",
+    "SRS_VERSION_FORMAT_INVALID": "Version must follow semantic versioning (e.g., 1.0.0)",
+    "SRS_TIMESTAMP_INVALID": "\"{{field}}\" must be a valid Unix timestamp",
+
+    "SRS_VALIDATION_ERROR": "Validation error",
+
+    "quickFixAvailable": "Quick fix available (Cmd+. or Ctrl+.)",
+    "addMissingProperty": "Add missing property \"{{property}}\"",
+    "fixTypeError": "Fix type error for \"{{property}}\" (change to {{type}})",
+    "fixEnumValue": "Fix enum value for \"{{property}}\"",
+    "removeUndefinedProperty": "Remove undefined property \"{{property}}\""
+  },
+  "ja": {
+    "SRS_REQUIRED_FIELD": "必須プロパティ \"{{field}}\" がありません",
+    "SRS_REQUIRED_MANIFEST": "マニフェストセクションは必須です",
+    "SRS_REQUIRED_FORMAT": "マニフェストにformatフィールドが必要です",
+    "SRS_REQUIRED_VERSION": "マニフェストにversionフィールドが必要です",
+
+    "SRS_TYPE_MISMATCH": "\"{{field}}\" の型が一致しません",
+    "SRS_TYPE_STRING_EXPECTED": "\"{{field}}\" は文字列である必要があります",
+    "SRS_TYPE_NUMBER_EXPECTED": "\"{{field}}\" は数値である必要があります",
+    "SRS_TYPE_BOOLEAN_EXPECTED": "\"{{field}}\" は真偽値である必要があります",
+    "SRS_TYPE_OBJECT_EXPECTED": "\"{{field}}\" はオブジェクトである必要があります",
+    "SRS_TYPE_ARRAY_EXPECTED": "\"{{field}}\" は配列である必要があります",
+
+    "SRS_FORMAT_INVALID": "\"{{field}}\" の形式が無効です",
+    "SRS_FORMAT_DATE_INVALID": "\"{{field}}\" は有効な日付である必要があります",
+    "SRS_FORMAT_EMAIL_INVALID": "\"{{field}}\" は有効なメールアドレスである必要があります",
+    "SRS_FORMAT_URL_INVALID": "\"{{field}}\" は有効なURLである必要があります",
+    "SRS_FORMAT_UUID_INVALID": "\"{{field}}\" は有効なUUIDである必要があります",
+
+    "SRS_ENUM_INVALID": "\"{{field}}\" は次のいずれかである必要があります: {{allowedValues}}",
+    "SRS_PATTERN_INVALID": "\"{{field}}\" が必須パターンと一致しません",
+    "SRS_MIN_LENGTH": "\"{{field}}\" は少なくとも {{limit}} 文字必要です",
+    "SRS_MAX_LENGTH": "\"{{field}}\" は最大 {{limit}} 文字までです",
+    "SRS_MINIMUM_VALUE": "\"{{field}}\" は {{limit}} 以上である必要があります",
+    "SRS_MAXIMUM_VALUE": "\"{{field}}\" は {{limit}} 以下である必要があります",
+
+    "SRS_ADDITIONAL_PROPERTY": "\"{{field}}\" はスキーマで定義されていません",
+    "SRS_INVALID_SCHEMA": "無効なスキーマ構造",
+
+    "SRS_MANIFEST_FORMAT_INVALID": "マニフェストのformatは \"extended-srs/v1\" である必要があります",
+    "SRS_VERSION_FORMAT_INVALID": "バージョンはセマンティックバージョニングに従う必要があります（例: 1.0.0）",
+    "SRS_TIMESTAMP_INVALID": "\"{{field}}\" は有効なUnixタイムスタンプである必要があります",
+
+    "SRS_VALIDATION_ERROR": "検証エラー",
+
+    "quickFixAvailable": "クイックフィックスが利用可能です (Cmd+. または Ctrl+.)",
+    "addMissingProperty": "不足しているプロパティ \"{{property}}\" を追加",
+    "fixTypeError": "\"{{property}}\" の型エラーを修正 ({{type}}に変更)",
+    "fixEnumValue": "\"{{property}}\" の列挙値を修正",
+    "removeUndefinedProperty": "未定義のプロパティ \"{{property}}\" を削除"
+  }
+}

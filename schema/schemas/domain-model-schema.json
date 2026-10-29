@@ -1,0 +1,1097 @@
+{
+  "$comment": "Copyright (c) 2026 CoLLMate, Inc. SPDX-License-Identifier: Apache-2.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://exsrs.org/extended-srs/v1/schemas/domain-model.json",
+  "type": "object",
+  "title": "ドメインモデル（DDD）",
+  "description": "ビジネスドメインの概念モデル",
+  "properties": {
+    "bounded_contexts": {
+      "type": "array",
+      "title": "境界づけられたコンテキスト",
+      "description": "ドメインの論理的境界",
+      "items": {
+        "$ref": "#/definitions/boundedContext"
+      }
+    },
+    "domain_services": {
+      "type": "array",
+      "title": "ドメインサービス",
+      "description": "コンテキストを跨ぐサービス定義",
+      "items": {
+        "$ref": "#/definitions/domainService"
+      }
+    }
+  },
+  "definitions": {
+    "boundedContext": {
+      "type": "object",
+      "required": [
+        "context_id",
+        "name"
+      ],
+      "properties": {
+        "context_id": {
+          "type": "string",
+          "title": "コンテキストID",
+          "description": "コンテキストの一意識別子"
+        },
+        "name": {
+          "type": "string",
+          "title": "コンテキスト名",
+          "description": "ビジネス上の名称"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "コンテキストの役割と責務"
+        },
+        "aggregates": {
+          "type": "array",
+          "title": "集約",
+          "description": "コンテキスト内の集約リスト",
+          "items": {
+            "$ref": "#/definitions/aggregate"
+          }
+        },
+        "ubiquitous_language": {
+          "type": "array",
+          "title": "ユビキタス言語",
+          "description": "用語定義",
+          "items": {
+            "$ref": "#/definitions/ubiquitousLanguageTerm"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "aggregate": {
+      "type": "object",
+      "required": [
+        "name",
+        "root_entity",
+        "entities"
+      ],
+      "properties": {
+        "aggregate_id": {
+          "type": "string",
+          "title": "集約ID",
+          "description": "集約の一意識別子"
+        },
+        "name": {
+          "type": "string",
+          "title": "集約名",
+          "description": "ビジネス用語での名称"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "集約の役割と責務"
+        },
+        "root_entity": {
+          "type": "string",
+          "title": "ルートエンティティ",
+          "description": "集約の起点となるエンティティ名"
+        },
+        "entities": {
+          "type": "array",
+          "title": "エンティティ",
+          "description": "集約内のエンティティ定義",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        },
+        "value_objects": {
+          "type": "array",
+          "title": "値オブジェクト",
+          "description": "集約内の値オブジェクト定義",
+          "items": {
+            "$ref": "#/definitions/valueObject"
+          }
+        },
+        "invariants": {
+          "type": "array",
+          "title": "不変条件",
+          "description": "ビジネス不変条件",
+          "items": {
+            "$ref": "#/definitions/invariant"
+          }
+        },
+        "domain_events": {
+          "type": "array",
+          "title": "ドメインイベント",
+          "description": "発生するイベント定義",
+          "items": {
+            "$ref": "#/definitions/domainEvent"
+          }
+        },
+        "repository_interface": {
+          "$ref": "#/definitions/repositoryInterface"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "name",
+        "attributes"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "エンティティ名",
+          "description": "エンティティの識別名"
+        },
+        "attributes": {
+          "type": "array",
+          "title": "属性",
+          "description": "エンティティの属性リスト（詳細形式のみ）",
+          "items": {
+            "$ref": "#/definitions/entityAttribute"
+          }
+        },
+        "behaviors": {
+          "type": "array",
+          "title": "振る舞い",
+          "description": "エンティティのメソッド",
+          "items": {
+            "type": "string",
+            "description": "メソッドシグネチャ"
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "title": "制約",
+          "description": "エンティティレベルの制約",
+          "items": {
+            "type": "string",
+            "description": "制約条件の記述"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "entityAttribute": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "属性名",
+          "description": "属性の識別名"
+        },
+        "type": {
+          "type": "string",
+          "title": "型",
+          "description": "データ型の定義"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "必須フラグ",
+          "description": "true/false"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "属性の意味"
+        },
+        "constraints": {
+          "type": "array",
+          "title": "制約",
+          "description": "属性に対する制約条件",
+          "items": {
+            "type": "string",
+            "description": "制約条件の記述"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "valueObject": {
+      "type": "object",
+      "required": [
+        "name",
+        "attributes"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "値オブジェクト名",
+          "description": "識別名"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "identifier",
+            "measurement",
+            "description",
+            "range",
+            "specification",
+            "composite"
+          ],
+          "title": "種類",
+          "description": "identifier/measurement/description/range/specification/composite"
+        },
+        "attributes": {
+          "type": "array",
+          "title": "構成要素",
+          "description": "値オブジェクトの属性（詳細形式のみ）",
+          "items": {
+            "$ref": "#/definitions/valueObjectAttribute"
+          }
+        },
+        "validation_rules": {
+          "type": "array",
+          "title": "検証ルール",
+          "description": "値の妥当性検証",
+          "items": {
+            "type": "string",
+            "description": "検証ルールの記述"
+          }
+        },
+        "behaviors": {
+          "type": "array",
+          "title": "振る舞い",
+          "description": "値オブジェクトのメソッド",
+          "items": {
+            "type": "string",
+            "description": "メソッドシグネチャ"
+          }
+        },
+        "equality": {
+          "type": "string",
+          "title": "等価性",
+          "description": "等価判定の定義"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "valueObjectAttribute": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "属性名"
+        },
+        "type": {
+          "type": "string",
+          "title": "型"
+        },
+        "validation": {
+          "type": "string",
+          "title": "検証ルール"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "invariant": {
+      "type": "object",
+      "required": [
+        "description",
+        "rule"
+      ],
+      "properties": {
+        "inv_id": {
+          "type": "string",
+          "title": "不変条件ID",
+          "description": "識別子"
+        },
+        "name": {
+          "type": "string",
+          "title": "不変条件名",
+          "description": "条件の名称"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "条件の詳細説明"
+        },
+        "rule": {
+          "type": "string",
+          "title": "ルール",
+          "description": "条件の形式的表現"
+        },
+        "error_message": {
+          "type": "string",
+          "title": "エラーメッセージ",
+          "description": "違反時の表示"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "title": "深刻度",
+          "description": "error/warning"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "domainEvent": {
+      "type": "object",
+      "required": [
+        "name",
+        "payload"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "title": "イベントID",
+          "description": "識別子"
+        },
+        "name": {
+          "type": "string",
+          "title": "イベント名",
+          "description": "過去形で記述"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "イベントの発生条件"
+        },
+        "payload": {
+          "type": "array",
+          "title": "ペイロード",
+          "description": "イベントデータ（詳細形式のみ）",
+          "items": {
+            "$ref": "#/definitions/eventPayloadItem"
+          }
+        },
+        "triggers": {
+          "type": "array",
+          "title": "トリガー",
+          "description": "発生条件",
+          "items": {
+            "type": "string",
+            "description": "発生条件の記述"
+          }
+        },
+        "subscribers": {
+          "type": "array",
+          "title": "購読者",
+          "description": "想定される購読サービス",
+          "items": {
+            "type": "string",
+            "description": "サービス名"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "eventPayloadItem": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "データ項目名"
+        },
+        "type": {
+          "type": "string",
+          "title": "データ型"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "必須フラグ"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "repositoryInterface": {
+      "type": "object",
+      "properties": {
+        "repo_id": {
+          "type": "string",
+          "title": "リポジトリID",
+          "description": "識別子"
+        },
+        "name": {
+          "type": "string",
+          "title": "リポジトリ名",
+          "description": "インターフェース名"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "リポジトリの役割"
+        },
+        "aggregate": {
+          "type": "string",
+          "title": "対象集約",
+          "description": "管理する集約名"
+        },
+        "methods": {
+          "type": "array",
+          "title": "メソッド",
+          "description": "リポジトリメソッド定義",
+          "items": {
+            "$ref": "#/definitions/repositoryMethod"
+          }
+        },
+        "specifications": {
+          "type": "array",
+          "title": "仕様",
+          "description": "検索仕様パターン",
+          "items": {
+            "$ref": "#/definitions/repositorySpecification"
+          }
+        },
+        "query_methods": {
+          "type": "array",
+          "title": "クエリメソッド",
+          "description": "検索メソッド定義",
+          "items": {
+            "$ref": "#/definitions/queryMethod"
+          }
+        },
+        "custom_operations": {
+          "type": "array",
+          "title": "カスタム操作",
+          "description": "特殊な操作定義",
+          "items": {
+            "$ref": "#/definitions/customOperation"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "repositoryMethod": {
+      "type": "object",
+      "required": [
+        "name",
+        "returns"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "メソッド名",
+          "description": "メソッドの識別名"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "メソッドの機能"
+        },
+        "params": {
+          "type": "array",
+          "title": "パラメータ",
+          "description": "引数定義（詳細形式のみ）",
+          "items": {
+            "$ref": "#/definitions/methodParameter"
+          }
+        },
+        "returns": {
+          "type": "string",
+          "title": "戻り値",
+          "description": "戻り値の型"
+        },
+        "async": {
+          "type": "boolean",
+          "title": "非同期フラグ",
+          "description": "true/false"
+        },
+        "throws": {
+          "type": "array",
+          "title": "例外",
+          "description": "スローする例外",
+          "items": {
+            "type": "string",
+            "description": "例外クラス名"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "methodParameter": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "パラメータ名"
+        },
+        "type": {
+          "type": "string",
+          "title": "型"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "必須フラグ"
+        },
+        "default": {
+          "title": "デフォルト値"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "repositorySpecification": {
+      "type": "object",
+      "required": [
+        "name",
+        "criteria"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "仕様名",
+          "description": "仕様の識別名"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "仕様の内容"
+        },
+        "criteria": {
+          "type": "string",
+          "title": "条件",
+          "description": "検索条件の定義"
+        },
+        "params": {
+          "type": "array",
+          "title": "パラメータ",
+          "description": "検索パラメータ",
+          "items": {
+            "type": "string",
+            "description": "パラメータ定義"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "queryMethod": {
+      "type": "object",
+      "required": [
+        "name",
+        "params",
+        "returns"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "クエリメソッド名",
+          "description": "メソッドの識別名"
+        },
+        "query": {
+          "type": "string",
+          "title": "クエリ",
+          "description": "クエリ定義（実装ヒント）"
+        },
+        "params": {
+          "type": "array",
+          "title": "パラメータ",
+          "description": "検索パラメータ",
+          "items": {
+            "type": "string",
+            "description": "パラメータ定義"
+          }
+        },
+        "returns": {
+          "type": "string",
+          "title": "戻り値",
+          "description": "戻り値の型"
+        },
+        "pagination": {
+          "type": "boolean",
+          "title": "ページング",
+          "description": "ページング対応フラグ"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "customOperation": {
+      "type": "object",
+      "required": [
+        "name",
+        "params",
+        "returns"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "操作名",
+          "description": "操作の識別名"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "操作の内容"
+        },
+        "params": {
+          "type": "array",
+          "title": "パラメータ",
+          "description": "操作パラメータ",
+          "items": {
+            "type": "string",
+            "description": "パラメータ定義"
+          }
+        },
+        "returns": {
+          "type": "string",
+          "title": "戻り値",
+          "description": "戻り値の型"
+        },
+        "transactional": {
+          "type": "boolean",
+          "title": "トランザクション",
+          "description": "トランザクション要否"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "ubiquitousLanguageTerm": {
+      "type": "object",
+      "required": [
+        "term",
+        "definition"
+      ],
+      "properties": {
+        "term": {
+          "type": "string",
+          "title": "用語",
+          "description": "定義する用語"
+        },
+        "definition": {
+          "type": "string",
+          "title": "定義",
+          "description": "用語の意味"
+        },
+        "context": {
+          "type": "string",
+          "title": "コンテキスト",
+          "description": "適用される文脈"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "entity",
+            "value_object",
+            "action",
+            "state",
+            "role",
+            "event",
+            "rule",
+            "metric"
+          ],
+          "title": "カテゴリ",
+          "description": "entity/value_object/action/state/role/event/rule/metric"
+        },
+        "synonyms": {
+          "type": "array",
+          "title": "同義語",
+          "description": "同じ意味の用語",
+          "items": {
+            "type": "string",
+            "description": "同義語"
+          }
+        },
+        "related_terms": {
+          "type": "array",
+          "title": "関連用語",
+          "description": "関連する用語",
+          "items": {
+            "type": "string",
+            "description": "関連用語"
+          }
+        },
+        "examples": {
+          "type": "array",
+          "title": "使用例",
+          "description": "用語の使用例文",
+          "items": {
+            "type": "string",
+            "description": "例文"
+          }
+        },
+        "notes": {
+          "type": "string",
+          "title": "備考",
+          "description": "補足説明"
+        },
+        "abbreviation": {
+          "type": "string",
+          "title": "略語",
+          "description": "省略形"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "domainService": {
+      "type": "object",
+      "required": [
+        "service_id",
+        "name"
+      ],
+      "properties": {
+        "service_id": {
+          "type": "string",
+          "title": "サービスID",
+          "description": "識別子"
+        },
+        "name": {
+          "type": "string",
+          "title": "サービス名",
+          "description": "サービスの名称"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "サービスの役割"
+        },
+        "operations": {
+          "type": "array",
+          "title": "操作",
+          "description": "提供する操作",
+          "items": {
+            "$ref": "#/definitions/domainServiceOperation"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "title": "依存関係",
+          "description": "依存する集約やサービス",
+          "items": {
+            "type": "string",
+            "description": "依存先の識別子"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "domainServiceOperation": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "操作名",
+          "description": "操作の識別名"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "操作の内容"
+        },
+        "params": {
+          "type": "array",
+          "title": "パラメータ",
+          "description": "操作の引数",
+          "items": {
+            "type": "string",
+            "description": "パラメータ定義"
+          }
+        },
+        "returns": {
+          "type": "string",
+          "title": "戻り値",
+          "description": "戻り値の型"
+        },
+        "business_rules": {
+          "type": "array",
+          "title": "ビジネスルール",
+          "description": "適用されるルール",
+          "items": {
+            "type": "string",
+            "description": "ルールの記述"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-docs": {
+    "definition": [
+      "## 1. ドメインモデルとは",
+      "### 1.1 定義と目的",
+      "ドメインモデルは、ビジネスドメイン全体の概念、ルール、プロセスを構造化して表現したものである。システム化の有無に関わらず、事業やユーザー利用環境の全体像を捉えることを目的とする。",
+      "### 1.2 ユースケースとの違い",
+      "| 観点 | ドメインモデル | ユースケース |",
+      "|------|--------------|-------------|",
+      "| **対象範囲** | ビジネス全体（システム化しない部分も含む） | システム化する部分のみ |",
+      "| **視点** | ビジネス概念とルールの構造化 | アクターとシステムの相互作用 |",
+      "| **抽象度** | 高い（概念レベル） | 具体的（機能レベル） |",
+      "| **変更頻度** | 低い（ビジネスの本質は安定） | 中程度（要求により変化） |",
+      "### 1.3 DDD（ドメイン駆動設計）との関係",
+      "拡張SRSのドメインモデルは、Eric EvansのDDD概念を直接サポートする：",
+      "- 境界づけられたコンテキスト（Bounded Context）",
+      "- 集約（Aggregate）",
+      "- エンティティ（Entity）",
+      "- 値オブジェクト（Value Object）",
+      "- ドメインイベント（Domain Event）",
+      "- ユビキタス言語（Ubiquitous Language）"
+    ],
+    "components": [
+      "## 2. ドメインモデルの構成要素",
+      "### 2.1 境界づけられたコンテキスト（Bounded Context）",
+      "#### 概念",
+      "同じ言葉が同じ意味を持つ、明確な境界を持った領域。大規模システムを論理的に分割する最上位の単位。",
+      "#### 記述例",
+      "```markdown",
+      "<!--@srs: domain-model: bounded_contexts[0]",
+      "context_id: \"sales_context\"",
+      "name: \"販売コンテキスト\"",
+      "description: |",
+      "  顧客への商品販売に関わる全ての業務を管理する。",
+      "  注文受付から出荷、請求までのプロセスを含む。",
+      "@srs-->",
+      "```",
+      "#### 設計指針",
+      "- **独立性**: 各コンテキストは独立して進化可能",
+      "- **明確な境界**: コンテキスト間の依存は最小限に",
+      "- **言語の統一**: コンテキスト内では同じ用語を一貫して使用",
+      "### 2.2 集約（Aggregate）",
+      "#### 概念",
+      "データ変更の単位となる、関連するエンティティと値オブジェクトのクラスター。必ず1つのルートエンティティを持つ。",
+      "#### 設計原則",
+      "- **トランザクション境界**: 集約は一貫性境界",
+      "- **外部参照**: 他の集約はIDでのみ参照",
+      "- **サイズ**: できるだけ小さく保つ",
+      "### 2.3 エンティティ（Entity）",
+      "#### 概念",
+      "一意の識別子を持ち、ライフサイクルを通じて同一性が保たれるオブジェクト。",
+      "### 2.4 値オブジェクト（Value Object）",
+      "#### 概念",
+      "識別子を持たず、属性の組み合わせで特徴づけられる不変オブジェクト。",
+      "#### 値オブジェクトの種類",
+      "- **identifier**: 識別子（OrderId、CustomerId等）",
+      "- **measurement**: 測定値（Money、Temperature等）",
+      "- **description**: 説明（ProductDescription、Address等）",
+      "- **range**: 範囲（DateRange、PriceRange等）",
+      "- **specification**: 仕様（ProductSpecification等）",
+      "- **composite**: 複合（Name、Address等）",
+      "### 2.5 ドメインイベント（Domain Event）",
+      "#### 概念",
+      "ドメイン内で発生した重要な出来事。過去形で命名し、不変である。",
+      "### 2.6 ユビキタス言語（Ubiquitous Language）",
+      "#### 概念",
+      "ドメインエキスパートと開発者が共通して使用する言語。コンテキスト内で一貫して使用される。"
+    ],
+    "process": [
+      "## 3. ドメインモデルの作成プロセス",
+      "### 3.1 ステップ1: ドメインエキスパートとの対話",
+      "1. **ビジネスプロセスの理解**",
+      "   - 現状の業務フローを詳細にヒアリング",
+      "   - システム化しない部分も含めて全体像を把握",
+      "2. **用語の収集と定義**",
+      "   - 業務で使われる専門用語を収集",
+      "   - 曖昧な用語は明確に定義",
+      "### 3.2 ステップ2: コンテキストの識別",
+      "1. **境界の発見**",
+      "   - 同じ用語が異なる意味で使われる箇所を特定",
+      "   - 組織構造やチーム構成も参考に",
+      "2. **コンテキストマップの作成**",
+      "   - コンテキスト間の関係を図示",
+      "   - 上流・下流の関係を明確化",
+      "### 3.3 ステップ3: 集約の設計",
+      "1. **不変条件の識別**",
+      "   - ビジネスルールから不変条件を抽出",
+      "   - トランザクション境界を決定",
+      "2. **ルートエンティティの選定**",
+      "   - 集約へのアクセスポイントを決定",
+      "   - 外部からの参照方法を定義",
+      "### 3.4 ステップ4: 詳細モデリング",
+      "1. **エンティティと値オブジェクトの区別**",
+      "   - 識別子の必要性で判断",
+      "   - ライフサイクルの有無を考慮",
+      "2. **ドメインイベントの抽出**",
+      "   - 状態変化の重要なタイミングを特定",
+      "   - イベントストーミングの活用"
+    ],
+    "best_practices": [
+      "## 4. ベストプラクティス",
+      "### 4.1 モデリングの原則",
+      "1. **ビジネス言語の使用**",
+      "   - 技術用語ではなくビジネス用語を使用",
+      "   - ドメインエキスパートが理解できる表現",
+      "2. **シンプルさの追求**",
+      "   - 過度に複雑なモデルは避ける",
+      "   - 必要最小限の概念で表現",
+      "3. **進化的設計**",
+      "   - 完璧を求めず、段階的に改善",
+      "   - フィードバックを基に継続的に洗練",
+      "### 4.2 よくある落とし穴",
+      "1. **技術的関心事の混入**",
+      "   - データベース設計をドメインモデルに持ち込まない",
+      "   - UIの都合でモデルを歪めない",
+      "2. **貧血ドメインモデル**",
+      "   - 振る舞いのないデータ構造にしない",
+      "   - ビジネスロジックを適切に配置",
+      "3. **過度な分割**",
+      "   - コンテキストを細かく分けすぎない",
+      "   - 集約を小さくしすぎない",
+      "### 4.3 実装への橋渡し",
+      "1. **ユースケースとの連携**",
+      "   - ドメインモデルで定義された概念をユースケースで具体的な機能として実現",
+      "2. **機能要件での詳細化**",
+      "   - ドメインモデルのビジネスルールを機能要件で具体的な検証処理として実装",
+      "3. **システム設計での実装**",
+      "   - ドメインモデルの構造をシステム設計で技術的に実現"
+    ],
+    "ai_collaboration": [
+      "## 5. AIエージェントとの協働",
+      "### 5.1 ドメインモデルからの自動生成",
+      "AIエージェントは、定義されたドメインモデルから以下を自動生成できる：",
+      "1. **ユースケースの導出**",
+      "   - エンティティの振る舞いからユースケースを推測",
+      "   - ドメインイベントから業務フローを構築",
+      "2. **実装コードの生成**",
+      "   - エンティティクラスの骨格",
+      "   - リポジトリインターフェースの実装",
+      "   - 値オブジェクトの完全な実装",
+      "3. **テストケースの作成**",
+      "   - 不変条件のテスト",
+      "   - ドメインイベントの発生確認",
+      "### 5.2 整合性チェック",
+      "AIエージェントによる自動チェック：",
+      "1. **用語の一貫性**",
+      "   - ユビキタス言語の統一的な使用",
+      "   - コンテキスト間での用語の衝突検出",
+      "2. **設計の妥当性**",
+      "   - 集約の境界の適切性",
+      "   - 循環参照の検出",
+      "3. **実装との乖離**",
+      "   - ドメインモデルとコードの差異",
+      "   - 未実装のビジネスルール"
+    ],
+    "examples": [
+      "## 6. 実例：ECサイトのドメインモデル",
+      "部分抽出のパスは配置例。既存要素に追記する例では、配列の添字を対象文書に合わせる。",
+      "### 6.1 コンテキストの分割",
+      "```markdown",
+      "<!--@srs: domain-model",
+      "bounded_contexts:",
+      "  - context_id: \"catalog\"",
+      "    name: \"商品カタログ\"",
+      "    description: \"商品情報の管理\"",
+      "    ",
+      "  - context_id: \"sales\"",
+      "    name: \"販売\"",
+      "    description: \"注文処理と顧客管理\"",
+      "    ",
+      "  - context_id: \"fulfillment\"",
+      "    name: \"フルフィルメント\"",
+      "    description: \"在庫管理と配送\"",
+      "    ",
+      "  - context_id: \"billing\"",
+      "    name: \"請求\"",
+      "    description: \"支払いと請求処理\"",
+      "@srs-->",
+      "```",
+      "### 6.2 販売コンテキストの詳細",
+      "```markdown",
+      "<!--@srs: domain-model: bounded_contexts[1]: aggregates",
+      "- aggregate_id: \"customer\"",
+      "  name: \"顧客\"",
+      "  root_entity: \"Customer\"",
+      "  entities:",
+      "    - name: \"Customer\"",
+      "      attributes:",
+      "        - name: \"customerId\"",
+      "          type: \"CustomerId\"",
+      "          required: true",
+      "        - name: \"email\"",
+      "          type: \"Email\"",
+      "          required: true",
+      "",
+      "- aggregate_id: \"order\"",
+      "  name: \"注文\"",
+      "  root_entity: \"Order\"",
+      "  entities:",
+      "    - name: \"Order\"",
+      "      attributes:",
+      "        - name: \"orderId\"",
+      "          type: \"OrderId\"",
+      "          required: true",
+      "        - name: \"customerId\"",
+      "          type: \"CustomerId\"",
+      "          required: true",
+      "      behaviors:",
+      "        - \"addItem(product: Product, quantity: Quantity): void\"",
+      "        - \"cancel(): void\"",
+      "        - \"ship(): void\"",
+      "      constraints:",
+      "        - \"注文確定後は顧客を変更できない\"",
+      "        - \"キャンセル済みの注文には商品を追加できない\"",
+      "@srs-->",
+      "```"
+    ]
+  },
+  "patternProperties": {
+    "^x-": {}
+  },
+  "additionalProperties": false
+}

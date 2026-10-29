@@ -1,0 +1,19 @@
+# Copyright (c) 2026 CoLLMate, Inc.
+# SPDX-License-Identifier: Apache-2.0
+exit-code: 1
+timeout: 5m
+pkg:
+  include-dev-deps: true
+secret:
+  config: .trivy/secret.yaml
+scan:
+  offline: true
+  disable-telemetry: true
+  skip-version-check: true
+  skip-dirs:
+    - '**/.git'
+    - '**/node_modules'
+    - '**/dist'
+    - '**/coverage'
+    - '**/__pycache__'
+    - '**/.cache/trivy'

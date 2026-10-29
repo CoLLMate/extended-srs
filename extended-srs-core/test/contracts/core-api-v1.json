@@ -1,0 +1,937 @@
+{
+  "src/api/index.ts": {
+    "AggregatedExtendedSRS": {
+      "type": "AggregatedExtendedSRS",
+      "members": {
+        "contributions": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ [filePath: string]: ExtendedSRSContribution; }"
+        },
+        "fieldSources": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ [fieldPath: string]: string[]; } | undefined"
+        },
+        "srs": {
+          "optional": false,
+          "readonly": false,
+          "type": "any"
+        },
+        "validation": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ isComplete: boolean; missingFields: string[]; errors: ExtendedSRSValidationError[]; warnings: ExtendedSRSValidationWarning[]; conflicts: ExtendedSRSConflict[]; }"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "AUTOMATED_CHECKS": {
+      "type": "readonly string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ConsistencyPair": {
+      "type": "ConsistencyPair",
+      "members": {
+        "headings": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "index": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "is_partial": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "markdown": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "markdown_lines": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ start: number; end: number; }"
+        },
+        "partial_path": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "yaml": {
+          "optional": false,
+          "readonly": false,
+          "type": "unknown"
+        },
+        "yaml_lines": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ start: number; end: number; }"
+        },
+        "yaml_raw": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ConsistencyResult": {
+      "type": "ConsistencyResult",
+      "members": {
+        "pairs": {
+          "optional": false,
+          "readonly": false,
+          "type": "ConsistencyPair[]"
+        },
+        "total_pairs": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "total_yaml_blocks": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "CoreApiV1": {
+      "type": "CoreApiV1",
+      "members": {
+        "aggregateDocuments": {
+          "optional": false,
+          "readonly": false,
+          "type": "(documents: readonly CoreDocument[], options?: { allowStandalone?: boolean | undefined; } | undefined) => Promise<CoreProject>"
+        },
+        "apiVersion": {
+          "optional": false,
+          "readonly": true,
+          "type": "1"
+        },
+        "createReview": {
+          "optional": false,
+          "readonly": false,
+          "type": "(srs: unknown, request: ReviewSubmission, metadata: { id: number; actor: string; timestamp: string; }) => ReviewRecord"
+        },
+        "extractConsistencyPairs": {
+          "optional": false,
+          "readonly": false,
+          "type": "(content: string, elementId?: string | undefined) => ConsistencyResult"
+        },
+        "extractElements": {
+          "optional": false,
+          "readonly": false,
+          "type": "(srs: unknown) => ProjectElement[]"
+        },
+        "findElement": {
+          "optional": false,
+          "readonly": false,
+          "type": "(project: CoreProject, elementId: string) => ElementDefinition | undefined"
+        },
+        "getProjectState": {
+          "optional": false,
+          "readonly": false,
+          "type": "(srs: unknown, filterStatus?: readonly string[] | undefined) => ProjectState"
+        },
+        "getReviewHistory": {
+          "optional": false,
+          "readonly": false,
+          "type": "(reviews: readonly ReviewRecord[]) => ReviewHistoryEntry[]"
+        },
+        "getUnblockedElements": {
+          "optional": false,
+          "readonly": false,
+          "type": "(srs: unknown, workType?: string | undefined, evidence?: DependencyEvidence | undefined, context?: WorkflowContext | undefined) => WorkSelection"
+        },
+        "getWorkflowConfig": {
+          "optional": false,
+          "readonly": false,
+          "type": "(srs: unknown) => WorkflowConfig"
+        },
+        "planElementStatusChange": {
+          "optional": false,
+          "readonly": false,
+          "type": "(documents: readonly RuleDocument[], request: LifecycleRequest, context?: LifecycleContext | undefined) => StatusChange"
+        },
+        "resolveReview": {
+          "optional": false,
+          "readonly": false,
+          "type": "(srs: unknown, reviews: readonly ReviewRecord[], request: ReviewResolution, decision: \"approved\" | \"rejected\", metadata: { actor: string; timestamp: string; }, context?: WorkflowContext | undefined) => ReviewDecision"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "CoreDocument": {
+      "type": "CoreDocument",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "info": {
+          "optional": true,
+          "readonly": false,
+          "type": "FileInfo | undefined"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "CoreProject": {
+      "type": "CoreProject",
+      "members": {
+        "aggregate": {
+          "optional": false,
+          "readonly": false,
+          "type": "AggregatedExtendedSRS"
+        },
+        "documents": {
+          "optional": false,
+          "readonly": false,
+          "type": "CoreDocument[]"
+        },
+        "metadata": {
+          "optional": false,
+          "readonly": false,
+          "type": "ProjectMetadata"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "createCoreApi": {
+      "type": "() => CoreApiV1",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "DependencyEvidence": {
+      "type": "DependencyEvidence",
+      "members": {
+        "completed": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly string[] | undefined"
+        },
+        "interfaces": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly string[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ElementDefinition": {
+      "type": "ElementDefinition",
+      "members": {
+        "source_files": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "value": {
+          "optional": false,
+          "readonly": false,
+          "type": "Record<string, unknown>"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "FileInfo": {
+      "type": "FileInfo",
+      "members": {
+        "is_directory": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "is_submodule": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "modified": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "size": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "GATE_TYPES": {
+      "type": "readonly string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "LIFECYCLE_STATES": {
+      "type": "readonly string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "LifecycleContext": {
+      "type": "LifecycleContext",
+      "members": {
+        "dependency_evidence": {
+          "optional": true,
+          "readonly": false,
+          "type": "DependencyEvidence | undefined"
+        },
+        "evaluateCondition": {
+          "optional": true,
+          "readonly": false,
+          "type": "((condition: string) => boolean | undefined) | undefined"
+        },
+        "resolveAutonomyGate": {
+          "optional": true,
+          "readonly": false,
+          "type": "((operation: string, level: Readonly<AutonomyLevel>) => boolean | undefined) | undefined"
+        },
+        "reviews": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly ReviewRecord[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "LifecycleRequest": {
+      "type": "LifecycleRequest",
+      "members": {
+        "action": {
+          "optional": true,
+          "readonly": false,
+          "type": "\"set\" | \"approve\" | \"reject\" | undefined"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "new_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "reason": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ProjectElement": {
+      "type": "ProjectElement",
+      "members": {
+        "blocks": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "depends_on": {
+          "optional": false,
+          "readonly": false,
+          "type": "TypedDependency[]"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "element_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "pending_review": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "priority": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ProjectMetadata": {
+      "type": "ProjectMetadata",
+      "members": {
+        "detectedSections": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "hasConstraints": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasDevelopmentImplementation": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasDomainModel": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasFunctionalRequirements": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasManifest": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasNonFunctionalRequirements": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasProjectOverview": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasSystemArchitecture": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasUseCases": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "hasWorkflow": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "projectName": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "version": {
+          "optional": false,
+          "readonly": false,
+          "type": "string | null"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ProjectState": {
+      "type": "ProjectState",
+      "members": {
+        "elements": {
+          "optional": false,
+          "readonly": false,
+          "type": "ProjectElement[]"
+        },
+        "summary": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ total: number; by_status: Record<string, number>; }"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewDecision": {
+      "type": "ReviewDecision",
+      "members": {
+        "new_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "review": {
+          "optional": false,
+          "readonly": false,
+          "type": "ReviewRecord"
+        },
+        "transition_pending": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ [key: string]: unknown; error: string; } | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewerRole": {
+      "type": "\"human\" | \"agent\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewHistoryEntry": {
+      "type": "ReviewHistoryEntry",
+      "members": {
+        "action": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "author": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "comment": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "gate_id": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "gate_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "review_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "reviewer_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "ReviewerRole | undefined"
+        },
+        "status": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"approved\" | \"rejected\" | \"pending\""
+        },
+        "timestamp": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewRecord": {
+      "type": "ReviewRecord",
+      "members": {
+        "acceptance_criteria_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ criterion: string; passed: boolean; }[] | undefined"
+        },
+        "affected_elements": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "checks": {
+          "optional": true,
+          "readonly": false,
+          "type": "Record<string, boolean> | undefined"
+        },
+        "comment": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "consistency_check_result": {
+          "optional": true,
+          "readonly": false,
+          "type": "unknown"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "gate_id": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "gate_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "reason": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "requested_changes": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "resolved_at": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "resolved_by": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "resolved_by_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "ReviewerRole | undefined"
+        },
+        "review_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "status": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"approved\" | \"rejected\" | \"pending\""
+        },
+        "subject": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "submitted_at": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "submitted_by": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "summary": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewResolution": {
+      "type": "ReviewResolution",
+      "members": {
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "checks": {
+          "optional": true,
+          "readonly": false,
+          "type": "Record<string, boolean> | undefined"
+        },
+        "comment": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "reason": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "requested_changes": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "review_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "reviewer_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "ReviewerRole | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewSubmission": {
+      "type": "ReviewSubmission",
+      "members": {
+        "acceptance_criteria_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ criterion: string; passed: boolean; }[] | undefined"
+        },
+        "affected_elements": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "consistency_check_result": {
+          "optional": true,
+          "readonly": false,
+          "type": "unknown"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "gate_id": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "gate_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "summary": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "RuleDocument": {
+      "type": "RuleDocument",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "SRSRuleError": {
+      "type": "SRSRuleError",
+      "members": {
+        "details": {
+          "optional": false,
+          "readonly": true,
+          "type": "Record<string, unknown>"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "stack": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [
+        "(message: string, details?: Record<string, unknown>): SRSRuleError"
+      ],
+      "constants": {}
+    },
+    "StatusChange": {
+      "type": "StatusChange",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "file": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "new_status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "no_op": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "original": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "previous_status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkflowConfig": {
+      "type": "WorkflowConfig",
+      "members": {
+        "approval_gates": {
+          "optional": true,
+          "readonly": false,
+          "type": "ApprovalGate[] | undefined"
+        },
+        "autonomy_policy": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ default_gate?: boolean | undefined; operations?: Record<string, AutonomyLevel> | undefined; } | undefined"
+        },
+        "consistency_check": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ enabled?: boolean | undefined; check_on_commit?: boolean | undefined; check_fields?: string[] | undefined; strict_mode?: boolean | undefined; } | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkflowContext": {
+      "type": "WorkflowContext",
+      "members": {
+        "evaluateCondition": {
+          "optional": true,
+          "readonly": false,
+          "type": "((condition: string) => boolean | undefined) | undefined"
+        },
+        "resolveAutonomyGate": {
+          "optional": true,
+          "readonly": false,
+          "type": "((operation: string, level: Readonly<AutonomyLevel>) => boolean | undefined) | undefined"
+        },
+        "reviews": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly ReviewRecord[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkSelection": {
+      "type": "WorkSelection",
+      "members": {
+        "elements": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ element_id: string; name: string; status: string; priority?: string | undefined; ready_for: WorkType; }[]"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkType": {
+      "type": "\"spec\" | \"impl\" | \"verify\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    }
+  }
+}

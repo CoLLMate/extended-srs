@@ -1,0 +1,405 @@
+{
+  "$comment": "Copyright (c) 2026 CoLLMate, Inc. SPDX-License-Identifier: Apache-2.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://exsrs.org/extended-srs/v1/schemas/workflow.json",
+  "type": "object",
+  "title": "ワークフロー設定",
+  "description": "Human-Agent 協調ワークフローの設定と意思決定記録",
+  "properties": {
+    "config": {
+      "$ref": "#/definitions/workflowConfig"
+    },
+    "decisions": {
+      "type": "array",
+      "title": "プロジェクトレベル決定記録",
+      "items": {
+        "$ref": "common-definitions-schema.json#/definitions/decisionRecord"
+      }
+    },
+    "pending_decisions": {
+      "type": "array",
+      "title": "未解決の意思決定事項",
+      "items": {
+        "$ref": "common-definitions-schema.json#/definitions/pendingDecision"
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-": {}
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "workflowConfig": {
+      "type": "object",
+      "title": "ワークフロー構成",
+      "properties": {
+        "autonomy_policy": {
+          "$ref": "#/definitions/autonomyPolicy"
+        },
+        "approval_gates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/approvalGateConfig"
+          }
+        },
+        "consistency_check": {
+          "$ref": "#/definitions/consistencyCheckConfig"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "autonomyPolicy": {
+      "type": "object",
+      "title": "自律度ポリシー",
+      "description": "操作種別ごとのエージェント自律度レベル定義",
+      "properties": {
+        "default_gate": {
+          "type": "boolean",
+          "default": false,
+          "description": "false=人間承認を要求しない方針 / true=人間承認を要求する方針。適用する操作と認証は利用側の実装に従う"
+        },
+        "operations": {
+          "type": "object",
+          "properties": {
+            "metadata_update": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_draft_to_tentative": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_tentative_to_approved": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_approved_to_in_progress": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_in_progress_to_in_review": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_in_review_to_implemented": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_implemented_to_verified": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_in_progress_to_blocked": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_blocked_to_in_progress": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "status_rejected_to_draft": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "content_change_draft": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "content_change_approved": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "new_requirement": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "delete_requirement": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "architecture_change": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "dependency_addition": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "test_generation": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "implementation_within_scope": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "priority_change": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            },
+            "scope_change": {
+              "$ref": "#/definitions/autonomyLevelConfig"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "autonomyLevelConfig": {
+      "type": "object",
+      "required": [
+        "gate"
+      ],
+      "properties": {
+        "gate": {
+          "type": "boolean",
+          "description": "true=人間承認を要求する方針 / false=人間承認を要求しない方針"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "gate をオーバーライドする条件式"
+        },
+        "approver_role": {
+          "type": "string",
+          "description": "承認者の役割（gate: true 時に使用）"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "approvalGateConfig": {
+      "type": "object",
+      "title": "承認ゲート設定",
+      "required": [
+        "gate_id",
+        "gate_type"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string"
+        },
+        "gate_type": {
+          "type": "string",
+          "enum": [
+            "content",
+            "implementation",
+            "verification",
+            "architecture"
+          ]
+        },
+        "required_for": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "approver_role": {
+          "type": "string"
+        },
+        "auto_approve_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "automated_checks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "acceptance_tests_pass",
+              "type_check_pass",
+              "lint_pass",
+              "security_scan_pass",
+              "coverage_threshold_met",
+              "performance_benchmark_met"
+            ]
+          }
+        },
+        "blocking": {
+          "type": "boolean",
+          "default": true
+        },
+        "on_approval_status_transition": {
+          "type": "string",
+          "description": "ゲート承認時に遷移する SRS ステータス値（例: content ゲート承認 → approved、implementation ゲート承認 → implemented）",
+          "enum": [
+            "approved",
+            "in_progress",
+            "implemented",
+            "verified"
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "consistencyCheckConfig": {
+      "type": "object",
+      "title": "整合性チェック設定",
+      "description": "YAML ↔ Markdown 双方向整合性チェックの設定",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "check_on_commit": {
+          "type": "boolean",
+          "default": true,
+          "description": "commit 時に自動チェックを要求する方針。実行には利用側での連携が必要で、公式 MCP は自動実行しない"
+        },
+        "check_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "チェック対象の YAML フィールド名リスト",
+          "default": [
+            "name",
+            "description",
+            "priority",
+            "acceptance_criteria",
+            "depends_on"
+          ]
+        },
+        "strict_mode": {
+          "type": "boolean",
+          "default": false,
+          "description": "矛盾がある場合に commit をブロックする方針。検出・ブロック処理は利用側で実装する"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-docs": {
+    "definition": [
+      "## 1. ワークフロー設定とは",
+      "### 1.1 定義と本質的目的",
+      "ワークフロー設定は、Human-Agent協調開発における**自律度ポリシー**、**承認ゲート**、**整合性チェック**、および**意思決定記録**を管理するセクションである。エージェントがどの操作を自律的に行えるか、どの操作に人間の承認が必要かを宣言的に定義する。",
+      "### 1.2 3つの構成要素",
+      "| 構成要素 | 目的 | 効果 |",
+      "|---------|------|------|",
+      "| **autonomy_policy** | 操作種別ごとのエージェント自律度レベルを定義 | 人間の意図に沿った自動化範囲の制御 |",
+      "| **approval_gates** | ステータス遷移やコンテンツ変更の承認ポイントを設定 | 品質保証と人間のコントロール維持 |",
+      "| **consistency_check** | YAML↔Markdown間の整合性チェック設定 | 整合性確認の対象と実行方針の共有 |",
+      "### 1.3 自律度ポリシー",
+      "| `gate` | 宣言する方針 | 適用 |",
+      "|--------|------|--------|",
+      "| `false` | 人間承認を要求しない | 実行可否は状態・依存条件なども含めて判定する |",
+      "| `true` | 人間の承認を要求する | 公式 core / MCP は対応する状態遷移・レビューで判定する |",
+      "設定したすべての操作を公式 MCP が実行・制御するわけではない。実行者の認証と役割の確認は利用側が行う。条件式の評価、自動チェックの実行、コミット時の整合性チェックには利用側の連携が必要。",
+      "### 1.4 意思決定記録",
+      "プロジェクトレベルの決定事項（`decisions`）と未解決の意思決定（`pending_decisions`）を構造化して管理する。これにより決定の経緯と根拠をトレーサブルに保持し、AI/人間どちらが後から参照しても意図を正確に理解できる。"
+    ],
+    "best_practices": [
+      "## 2. ベストプラクティス",
+      "### 2.1 自律度ポリシーの設計",
+      "1. **デフォルトは gate: false で開始**",
+      "   - `default_gate: false` を推奨初期値とする",
+      "   - 人間の承認が必要な操作のみ明示的に `gate: true` に設定",
+      "2. **操作種別ごとの適切な設定**",
+      "   - `metadata_update`: 低リスク → `gate: false`",
+      "   - `content_change_approved`: 承認済みコンテンツの変更 → `gate: true`",
+      "   - `architecture_change`: アーキテクチャ変更 → `gate: true`",
+      "   - `status_tentative_to_approved`: 意思決定 → `gate: true`",
+      "   - `status_blocked_to_in_progress`: ブロック解除 → `gate: false`",
+      "   - `status_rejected_to_draft`: 差し戻し修正 → `gate: false`",
+      "3. **条件付きオーバーライドの活用**",
+      "   - `conditions` に切替条件を記述し、利用側で評価処理を用意する",
+      "   - 例: priority が must の要素のみ `gate: true` にする",
+      "### 2.2 承認ゲートの設計",
+      "1. **必要最小限のゲート設定**",
+      "   - 全てにゲートを設けず、重要な遷移のみに設定",
+      "   - `auto_approve_conditions` に自動承認の条件を記述する。公式 MCP には条件式の評価器はない",
+      "   - `on_approval_status_transition` でゲート承認後の status 遷移先を明示",
+      "2. **自動化チェックの活用**",
+      "   - `automated_checks` に必要なチェックを列挙する。呼び出し側で実行・確認した結果を公式 MCP に渡す",
+      "   - 自動チェック合格時の `auto_approve_conditions` と組み合わせて効率化",
+      "### 2.3 整合性チェックの運用",
+      "1. **段階的な厳格化**",
+      "   - 利用側に整合性チェックを実装する場合、初期は `strict_mode: false` で警告に留める方針を設定",
+      "   - プロジェクト安定後に `strict_mode: true` に移行",
+      "2. **チェック対象の選定**",
+      "   - `check_fields` で重要なフィールドのみを対象に",
+      "   - `check_on_commit: true` はコミット時の自動検証を要求する設定。Git フック等の実行処理は別途用意する。公式 MCP の `check_consistency` は本文と YAML の組を返し、意味的な合否は判定しない"
+    ],
+    "examples": [
+      "## 3. 実例",
+      "### 3.1 推奨デフォルト設定",
+      "```markdown",
+      "<!--@srs: workflow",
+      "config:",
+      "  autonomy_policy:",
+      "    default_gate: false",
+      "    operations:",
+      "      status_tentative_to_approved:",
+      "        gate: true",
+      "        approver_role: \"product_owner\"",
+      "      status_in_review_to_implemented:",
+      "        gate: true",
+      "      status_implemented_to_verified:",
+      "        gate: true",
+      "      content_change_approved:",
+      "        gate: true",
+      "      architecture_change:",
+      "        gate: true",
+      "        approver_role: \"architect\"",
+      "      delete_requirement:",
+      "        gate: true",
+      "      priority_change:",
+      "        gate: true",
+      "      scope_change:",
+      "        gate: true",
+      "  approval_gates:",
+      "    - gate_id: \"req-approval\"",
+      "      gate_type: \"content\"",
+      "      required_for: [\"tentative_to_approved\"]",
+      "      approver_role: \"product_owner\"",
+      "      on_approval_status_transition: \"approved\"",
+      "      automated_checks:",
+      "        - \"acceptance_tests_pass\"",
+      "    - gate_id: \"impl-verification\"",
+      "      gate_type: \"verification\"",
+      "      required_for: [\"implemented_to_verified\"]",
+      "      on_approval_status_transition: \"verified\"",
+      "      automated_checks:",
+      "        - \"acceptance_tests_pass\"",
+      "        - \"type_check_pass\"",
+      "        - \"coverage_threshold_met\"",
+      "  consistency_check:",
+      "    enabled: true",
+      "    check_on_commit: true",
+      "    strict_mode: false",
+      "@srs-->",
+      "```",
+      "### 3.2 意思決定記録の例",
+      "```markdown",
+      "<!--@srs: workflow",
+      "decisions:",
+      "  - decision_id: \"DEC-001\"",
+      "    decided_by: \"architect\"",
+      "    decision: \"マイクロサービスアーキテクチャを採用\"",
+      "    rationale: \"スケーラビリティと独立デプロイの要件を満たすため\"",
+      "    alternatives_considered:",
+      "      - option: \"モノリシック\"",
+      "        pros: [\"シンプル\", \"初期開発が速い\"]",
+      "        cons: [\"スケーラビリティに制約\"]",
+      "        rejected_reason: \"将来のスケール要件を満たせない\"",
+      "    affected_elements: [\"SA-001\", \"SA-002\"]",
+      "    reversibility: \"costly_to_reverse\"",
+      "pending_decisions:",
+      "  - question: \"認証方式をOAuth2とSAMLのどちらにするか\"",
+      "    raised_by: \"security_lead\"",
+      "    impact: [\"NFR-SEC-001\", \"SA-003\"]",
+      "    urgency: \"blocking\"",
+      "    options:",
+      "      - option: \"OAuth2\"",
+      "        implication: \"モバイル対応が容易、SPA向き\"",
+      "      - option: \"SAML\"",
+      "        implication: \"エンタープライズSSO統合に強い\"",
+      "@srs-->",
+      "```"
+    ]
+  }
+}

@@ -1,0 +1,2226 @@
+{
+  "src/index.ts": {
+    "AggregatedExtendedSRS": {
+      "type": "AggregatedExtendedSRS",
+      "members": {
+        "contributions": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ [filePath: string]: ExtendedSRSContribution; }"
+        },
+        "fieldSources": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ [fieldPath: string]: string[]; } | undefined"
+        },
+        "srs": {
+          "optional": false,
+          "readonly": false,
+          "type": "any"
+        },
+        "validation": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ isComplete: boolean; missingFields: string[]; errors: ExtendedSRSValidationError[]; warnings: ExtendedSRSValidationWarning[]; conflicts: ExtendedSRSConflict[]; }"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "allowedTransitions": {
+      "type": "(from: string) => readonly LifecycleState[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "analyzeFileStructure": {
+      "type": "(aggregatedData: any, markdownFiles: string[], allFiles: string[]) => { entryFile: string | null; totalFiles: number; markdownFileCount: number; markdownFiles: { path: string; hasMetadata: any; sections: string[]; yamlBlockCount: any; }[]; hasEntryFile: boolean; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "applyPartialData": {
+      "type": "(target: any, path: string[], data: any) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ApprovalGate": {
+      "type": "ApprovalGate",
+      "members": {
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "auto_approve_conditions": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "automated_checks": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "blocking": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "gate_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "gate_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "GateType"
+        },
+        "on_approval_status_transition": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "required_for": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "approvalTarget": {
+      "type": "(status: string) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "assertLifecycleTransition": {
+      "type": "(srs: any, elementId: string, from: string, to: string, reason?: string | undefined, context?: LifecycleContext) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "assertWorkflowTransition": {
+      "type": "(srs: any, elementId: string, from: string, to: string, context?: WorkflowContext) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "AUTOMATED_CHECKS": {
+      "type": "readonly string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "AutonomyLevel": {
+      "type": "AutonomyLevel",
+      "members": {
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "conditions": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "gate": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "canAutoApprove": {
+      "type": "(gate: ApprovalGate, checks: Record<string, boolean>, context: WorkflowContext) => boolean",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "clearResolveCache": {
+      "type": "() => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "clearTreeCache": {
+      "type": "() => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "containsElementById": {
+      "type": "(data: any, elementId: string) => boolean",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ContentSection": {
+      "type": "ContentSection",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "endLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "headings": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "sections": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "startLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "countBySeverity": {
+      "type": "(validationResults: ValidationResult[]) => { errors: number; warnings: number; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "createEntryFileNotFoundError": {
+      "type": "() => { level: \"error\"; message: string; path: string; line: number; column: number; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "createMetadataSummary": {
+      "type": "(srsData: any) => { hasManifest: boolean; hasProjectOverview: boolean; hasUseCases: boolean; hasFunctionalRequirements: boolean; hasNonFunctionalRequirements: boolean; hasConstraints: boolean; hasSystemArchitecture: boolean; hasDevelopmentImplementation: boolean; hasDomainModel: boolean; hasWorkflow: boolean; detectedSections: string[]; projectName: any; version: any; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "createMissingSectionError": {
+      "type": "(section: string, filePath: string) => { level: \"error\"; message: string; path: string; line: number; column: number; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "createProjectStatus": {
+      "type": "(aggregatedData: any, _validationResult: any, fileContents: Map<string, { content: string; }>, markdownFiles: string[], allFiles: string[]) => { projectName: string; metadataSummary: { hasManifest: boolean; hasProjectOverview: boolean; hasUseCases: boolean; hasFunctionalRequirements: boolean; hasNonFunctionalRequirements: boolean; hasConstraints: boolean; hasSystemArchitecture: boolean; hasDevelopmentImplementation: boolean; hasDomainModel: boolean; hasWorkflow: boolean; detectedSections: string[]; projectName: any; version: any; }; fileStructure: { entryFile: string | null; totalFiles: number; markdownFileCount: number; markdownFiles: { path: string; hasMetadata: any; sections: string[]; yamlBlockCount: any; }[]; hasEntryFile: boolean; }; hasImplementation: boolean; missingSections: string[]; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "createReview": {
+      "type": "(srs: any, args: ReviewSubmission, metadata: { id: number; actor: string; timestamp: string; }) => ReviewRecord",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "createValidationSummary": {
+      "type": "(validationResults: ValidationResult[]) => { totalIssues: number; errorCount: number; warningCount: number; filesWithErrors: string[]; filesWithWarnings: string[]; hasErrors: boolean; hasWarnings: boolean; isValid: boolean; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "DependencyEvidence": {
+      "type": "DependencyEvidence",
+      "members": {
+        "completed": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly string[] | undefined"
+        },
+        "interfaces": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly string[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "determineYamlPath": {
+      "type": "(yamlLines: string[], lineIndex: number) => string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ErrorCode": {
+      "type": "ErrorCode",
+      "members": {},
+      "constructors": [],
+      "constants": {
+        "REQUIRED_FIELD": "SRS_REQUIRED_FIELD",
+        "REQUIRED_MANIFEST": "SRS_REQUIRED_MANIFEST",
+        "REQUIRED_FORMAT": "SRS_REQUIRED_FORMAT",
+        "REQUIRED_VERSION": "SRS_REQUIRED_VERSION",
+        "TYPE_MISMATCH": "SRS_TYPE_MISMATCH",
+        "TYPE_STRING_EXPECTED": "SRS_TYPE_STRING_EXPECTED",
+        "TYPE_NUMBER_EXPECTED": "SRS_TYPE_NUMBER_EXPECTED",
+        "TYPE_BOOLEAN_EXPECTED": "SRS_TYPE_BOOLEAN_EXPECTED",
+        "TYPE_OBJECT_EXPECTED": "SRS_TYPE_OBJECT_EXPECTED",
+        "TYPE_ARRAY_EXPECTED": "SRS_TYPE_ARRAY_EXPECTED",
+        "FORMAT_INVALID": "SRS_FORMAT_INVALID",
+        "FORMAT_DATE_INVALID": "SRS_FORMAT_DATE_INVALID",
+        "FORMAT_EMAIL_INVALID": "SRS_FORMAT_EMAIL_INVALID",
+        "FORMAT_URL_INVALID": "SRS_FORMAT_URL_INVALID",
+        "FORMAT_UUID_INVALID": "SRS_FORMAT_UUID_INVALID",
+        "ENUM_INVALID": "SRS_ENUM_INVALID",
+        "PATTERN_INVALID": "SRS_PATTERN_INVALID",
+        "MIN_LENGTH": "SRS_MIN_LENGTH",
+        "MAX_LENGTH": "SRS_MAX_LENGTH",
+        "MINIMUM_VALUE": "SRS_MINIMUM_VALUE",
+        "MAXIMUM_VALUE": "SRS_MAXIMUM_VALUE",
+        "ADDITIONAL_PROPERTY": "SRS_ADDITIONAL_PROPERTY",
+        "INVALID_SCHEMA": "SRS_INVALID_SCHEMA",
+        "MANIFEST_FORMAT_INVALID": "SRS_MANIFEST_FORMAT_INVALID",
+        "VERSION_FORMAT_INVALID": "SRS_VERSION_FORMAT_INVALID",
+        "TIMESTAMP_INVALID": "SRS_TIMESTAMP_INVALID",
+        "VALIDATION_ERROR": "SRS_VALIDATION_ERROR"
+      }
+    },
+    "ExtendedSRSAggregator": {
+      "type": "ExtendedSRSAggregator",
+      "members": {
+        "aggregate": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => Promise<AggregatedExtendedSRS>"
+        },
+        "findEntryFile": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => Promise<FileInfo | null>"
+        },
+        "updateData": {
+          "optional": false,
+          "readonly": false,
+          "type": "(fileContents: Map<string, { content: string; }>, projectFiles: FileInfo[]) => void"
+        }
+      },
+      "constructors": [
+        "(fileContents: Map<string, { content: string; }>, projectFiles: FileInfo[]): ExtendedSRSAggregator"
+      ],
+      "constants": {}
+    },
+    "ExtendedSRSConflict": {
+      "type": "ExtendedSRSConflict",
+      "members": {
+        "field": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "files": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ExtendedSRSContribution": {
+      "type": "ExtendedSRSContribution",
+      "members": {
+        "contentSections": {
+          "optional": true,
+          "readonly": false,
+          "type": "ContentSection[] | undefined"
+        },
+        "overrides": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "partialPaths": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "srsData": {
+          "optional": true,
+          "readonly": false,
+          "type": "any"
+        },
+        "startLine": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "yamlBlocks": {
+          "optional": true,
+          "readonly": false,
+          "type": "YAMLBlock[] | undefined"
+        },
+        "yamlContent": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ExtendedSRSSchema": {
+      "type": "ExtendedSRSSchema",
+      "members": {
+        "$id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "$schema": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "properties": {
+          "optional": false,
+          "readonly": false,
+          "type": "{ [key: string]: any; }"
+        },
+        "required": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ExtendedSRSSection": {
+      "type": "ExtendedSRSSection",
+      "members": {
+        "level": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "line": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "title": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ExtendedSRSTree": {
+      "type": "ExtendedSRSTree",
+      "members": {
+        "data": {
+          "optional": false,
+          "readonly": false,
+          "type": "any"
+        },
+        "mergeMap": {
+          "optional": false,
+          "readonly": false,
+          "type": "Map<string, MergedMetadataEntry>"
+        },
+        "metadataBlocks": {
+          "optional": false,
+          "readonly": false,
+          "type": "MetadataBlock[]"
+        },
+        "validationErrors": {
+          "optional": false,
+          "readonly": false,
+          "type": "TreeValidationError[]"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ExtendedSRSTreeManager": {
+      "type": "ExtendedSRSTreeManager",
+      "members": {
+        "addMetadataBlock": {
+          "optional": false,
+          "readonly": false,
+          "type": "(filepath: string, lineNumber: number, content: string, type: \"full\" | \"partial\", path?: string | undefined) => void"
+        },
+        "exportMergedMetadata": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => string"
+        },
+        "exportToMarkdown": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => Map<string, string>"
+        },
+        "getSourcesFor": {
+          "optional": false,
+          "readonly": false,
+          "type": "(path: string) => MetadataLocation[]"
+        },
+        "getTree": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => ExtendedSRSTree"
+        },
+        "getValueAt": {
+          "optional": false,
+          "readonly": false,
+          "type": "(path: string) => any"
+        },
+        "loadDocument": {
+          "optional": false,
+          "readonly": false,
+          "type": "(filepath: string, content: string, commitId?: string | undefined) => void"
+        },
+        "loadDocuments": {
+          "optional": false,
+          "readonly": false,
+          "type": "(documents: { filepath: string; content: string; commitId?: string | undefined; }[]) => void"
+        },
+        "splitMetadataBlock": {
+          "optional": false,
+          "readonly": false,
+          "type": "(location: MetadataLocation, splitPath: string, insertAfterLines?: number) => void"
+        },
+        "updateMetadataBlock": {
+          "optional": false,
+          "readonly": false,
+          "type": "(location: MetadataLocation, newContent: string) => void"
+        }
+      },
+      "constructors": [
+        "(): ExtendedSRSTreeManager"
+      ],
+      "constants": {}
+    },
+    "ExtendedSRSTreeParser": {
+      "type": "ExtendedSRSTreeParser",
+      "members": {
+        "mergeMetadataBlocks": {
+          "optional": false,
+          "readonly": false,
+          "type": "(blocks: MetadataBlock[], parseErrors?: TreeValidationError[] | undefined) => ExtendedSRSTree"
+        },
+        "parseDocument": {
+          "optional": false,
+          "readonly": false,
+          "type": "(content: string, filepath: string, commitId?: string | undefined) => { blocks: MetadataBlock[]; parseErrors: TreeValidationError[]; }"
+        }
+      },
+      "constructors": [
+        "(): ExtendedSRSTreeParser"
+      ],
+      "constants": {}
+    },
+    "ExtendedSRSValidationError": {
+      "type": "ExtendedSRSValidationError",
+      "members": {
+        "column": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "field": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "level": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"error\""
+        },
+        "line": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ExtendedSRSValidationWarning": {
+      "type": "ExtendedSRSValidationWarning",
+      "members": {
+        "column": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "field": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "level": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"warning\""
+        },
+        "line": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "extractContentSections": {
+      "type": "(content: string) => ContentSection[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "extractElements": {
+      "type": "(srs: any) => ProjectElement[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "extractSectionsWithMetadata": {
+      "type": "(content: string) => Map<string, any>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "extractYAMLBlocks": {
+      "type": "(content: string) => YAMLBlock[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "FieldLocation": {
+      "type": "FieldLocation",
+      "members": {
+        "filepath": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "lineEnd": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "lineStart": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "FileInfo": {
+      "type": "FileInfo",
+      "members": {
+        "is_directory": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "is_submodule": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "modified": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "size": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "filterBySeverity": {
+      "type": "(validationResults: ValidationResult[], severity: \"error\" | \"warning\") => ValidationResult[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "findElementById": {
+      "type": "(data: any, elementId: string) => Record<string, any> | undefined",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "findElementStatus": {
+      "type": "(data: any, elementId: string) => string | undefined",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "findEntryFileFromContributions": {
+      "type": "(contributions: { [filePath: string]: any; }) => string | null",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "formatErrorFromData": {
+      "type": "(errorData: any) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "formatTemplate": {
+      "type": "(template: string, context?: MessageContext) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "formatValidationMessage": {
+      "type": "(result: ValidationResult) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "GATE_TYPES": {
+      "type": "readonly string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "gatesForTransition": {
+      "type": "(config: WorkflowConfig, from: string, to: string) => ApprovalGate[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "GateType": {
+      "type": "\"content\" | \"implementation\" | \"verification\" | \"architecture\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getAjvInstance": {
+      "type": "() => Ajv | null",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getAvailableLocales": {
+      "type": "() => Locale[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getCurrentLocale": {
+      "type": "() => Locale",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getEntryFileRequirements": {
+      "type": "() => string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getErrorCode": {
+      "type": "(error: { keyword: string; instancePath?: string | undefined; params?: any; schemaPath?: string | undefined; }) => ErrorCode",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getErrorMessage": {
+      "type": "(errorCode: ErrorCode, context?: ErrorContext) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getExtendedSRSSchemaTree": {
+      "type": "() => SchemaTreeNode",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getMessage": {
+      "type": "(bundle: MessageBundle, key: string, context?: MessageContext, locale?: Locale | undefined) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getMissingSections": {
+      "type": "(srsData: any) => string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getProjectName": {
+      "type": "(aggregatedData: any, fileContents?: Map<string, { content: string; }> | undefined) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getProjectState": {
+      "type": "(srs: any, filterStatus?: readonly string[] | undefined) => { elements: ProjectElement[]; summary: { total: number; by_status: { [k: string]: number; }; }; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getReviewHistory": {
+      "type": "(reviews: readonly ReviewRecord[]) => { review_id: number; gate_type: string; gate_id: string | undefined; author: string; action: string; comment: string; timestamp: string; status: \"approved\" | \"rejected\" | \"pending\"; reviewer_role: ReviewerRole | undefined; approver_role: string | undefined; }[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getSchemaNodeForPath": {
+      "type": "(schema: any, path: string[]) => any",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getUIMessage": {
+      "type": "(key: string, context?: ErrorContext) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getUnblockedElements": {
+      "type": "(srs: any, workType?: string | undefined, evidence?: DependencyEvidence, context?: WorkflowContext) => { elements: { element_id: string; name: string; status: string; priority: string | undefined; ready_for: \"spec\" | \"impl\" | \"verify\"; }[]; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getUniqueFilePaths": {
+      "type": "(validationResults: ValidationResult[], excludeProjectLevel?: boolean) => string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getValidationFunction": {
+      "type": "() => any",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getWorkflowConfig": {
+      "type": "(srs: any) => WorkflowConfig",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "groupValidationResultsAsObject": {
+      "type": "(validationResults: ValidationResult[]) => Record<string, string[]>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "groupValidationResultsByFile": {
+      "type": "(validationResults: ValidationResult[]) => Map<string, string[]>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "hasImplementationSections": {
+      "type": "(srsData: any) => boolean",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ID_FIELDS": {
+      "type": "string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "initializeAjv": {
+      "type": "() => Promise<Ajv>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "initializeExtendedSRSSchemas": {
+      "type": "() => Promise<void>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "isEntryFile": {
+      "type": "(filePath: string, _hasManifest?: boolean) => boolean",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "isLocaleSupported": {
+      "type": "(locale: string) => locale is Locale",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "LIFECYCLE_STATES": {
+      "type": "readonly string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "LifecycleContext": {
+      "type": "LifecycleContext",
+      "members": {
+        "dependency_evidence": {
+          "optional": true,
+          "readonly": false,
+          "type": "DependencyEvidence | undefined"
+        },
+        "evaluateCondition": {
+          "optional": true,
+          "readonly": false,
+          "type": "((condition: string) => boolean | undefined) | undefined"
+        },
+        "resolveAutonomyGate": {
+          "optional": true,
+          "readonly": false,
+          "type": "((operation: string, level: Readonly<AutonomyLevel>) => boolean | undefined) | undefined"
+        },
+        "reviews": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly ReviewRecord[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "LifecycleRequest": {
+      "type": "LifecycleRequest",
+      "members": {
+        "action": {
+          "optional": true,
+          "readonly": false,
+          "type": "\"set\" | \"approve\" | \"reject\" | undefined"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "new_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "reason": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "LifecycleState": {
+      "type": "\"draft\" | \"tentative\" | \"approved\" | \"in_progress\" | \"blocked\" | \"in_review\" | \"rejected\" | \"implemented\" | \"verified\" | \"deferred\" | \"dropped\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "loadExtendedSRSSchema": {
+      "type": "() => ExtendedSRSSchema",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "loadSchema": {
+      "type": "(schemaPath: string) => any",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "loadSchemaFromFile": {
+      "type": "(schemaPath: string) => any",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "Locale": {
+      "type": "\"en\" | \"ja\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "LocaleProvider": {
+      "type": "LocaleProvider",
+      "members": {
+        "getCurrentLocale": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => Locale"
+        },
+        "setCurrentLocale": {
+          "optional": true,
+          "readonly": false,
+          "type": "((locale: Locale) => void) | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "MergedMetadataEntry": {
+      "type": "MergedMetadataEntry",
+      "members": {
+        "finalSource": {
+          "optional": false,
+          "readonly": false,
+          "type": "MetadataLocation"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "sources": {
+          "optional": false,
+          "readonly": false,
+          "type": "MetadataLocation[]"
+        },
+        "value": {
+          "optional": false,
+          "readonly": false,
+          "type": "any"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "MessageBundle": {
+      "type": "MessageBundle",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "MessageContext": {
+      "type": "MessageContext",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "MetadataBlock": {
+      "type": "MetadataBlock",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "location": {
+          "optional": false,
+          "readonly": false,
+          "type": "MetadataLocation"
+        },
+        "path": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "type": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"full\" | \"partial\""
+        },
+        "yamlContent": {
+          "optional": false,
+          "readonly": false,
+          "type": "any"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "MetadataLocation": {
+      "type": "MetadataLocation",
+      "members": {
+        "commitId": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "filepath": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "lineEnd": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "lineStart": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "timestamp": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "normalizeManifestFilePath": {
+      "type": "(path: unknown) => string | null",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ParsedExtendedSRS": {
+      "type": "ParsedExtendedSRS",
+      "members": {
+        "contentSections": {
+          "optional": true,
+          "readonly": false,
+          "type": "ContentSection[] | undefined"
+        },
+        "isPartial": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "partialPaths": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "path": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "raw": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "sections": {
+          "optional": false,
+          "readonly": false,
+          "type": "ExtendedSRSSection[]"
+        },
+        "srsData": {
+          "optional": true,
+          "readonly": false,
+          "type": "any"
+        },
+        "startLine": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "yamlBlocks": {
+          "optional": true,
+          "readonly": false,
+          "type": "ParsedYAMLBlock[] | undefined"
+        },
+        "yamlContent": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ParsedYAMLBlock": {
+      "type": "ParsedYAMLBlock",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "data": {
+          "optional": true,
+          "readonly": false,
+          "type": "any"
+        },
+        "endLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "error": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "isPartial": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "path": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "startLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "yamlEndLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "yamlStartLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "parseExtendedSRS": {
+      "type": "(content: string) => ParsedExtendedSRS | null",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "parsePartialPath": {
+      "type": "(pathStr: string) => string[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "parseYAMLBlock": {
+      "type": "(block: YAMLBlock) => ParsedYAMLBlock",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "planElementStatusChange": {
+      "type": "(documents: readonly RuleDocument[], request: LifecycleRequest, context?: LifecycleContext) => StatusChange",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ProjectElement": {
+      "type": "ProjectElement",
+      "members": {
+        "blocks": {
+          "optional": false,
+          "readonly": false,
+          "type": "string[]"
+        },
+        "depends_on": {
+          "optional": false,
+          "readonly": false,
+          "type": "TypedDependency[]"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "element_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "pending_review": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "priority": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "rejectionTarget": {
+      "type": "(status: string, reason: string) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "requiredChecksPass": {
+      "type": "(gate: ApprovalGate, checks?: Record<string, boolean>) => boolean",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "resolveReview": {
+      "type": "(srs: any, reviews: readonly ReviewRecord[], args: ReviewResolution, decision: \"approved\" | \"rejected\", metadata: { actor: string; timestamp: string; }, context?: WorkflowContext) => { review: ReviewRecord; new_status: string | undefined; transition_pending: { [key: string]: unknown; error: string; } | undefined; }",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "resolveSchemaReference": {
+      "type": "(ref: string, contextSchema?: any) => any",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewerRole": {
+      "type": "\"human\" | \"agent\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewRecord": {
+      "type": "ReviewRecord",
+      "members": {
+        "acceptance_criteria_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ criterion: string; passed: boolean; }[] | undefined"
+        },
+        "affected_elements": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "checks": {
+          "optional": true,
+          "readonly": false,
+          "type": "Record<string, boolean> | undefined"
+        },
+        "comment": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "consistency_check_result": {
+          "optional": true,
+          "readonly": false,
+          "type": "unknown"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "gate_id": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "gate_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "reason": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "requested_changes": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "resolved_at": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "resolved_by": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "resolved_by_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "ReviewerRole | undefined"
+        },
+        "review_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "status": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"approved\" | \"rejected\" | \"pending\""
+        },
+        "subject": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "submitted_at": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "submitted_by": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "summary": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewResolution": {
+      "type": "ReviewResolution",
+      "members": {
+        "approver_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "checks": {
+          "optional": true,
+          "readonly": false,
+          "type": "Record<string, boolean> | undefined"
+        },
+        "comment": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "reason": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "requested_changes": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "review_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "reviewer_role": {
+          "optional": true,
+          "readonly": false,
+          "type": "ReviewerRole | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "reviewSubject": {
+      "type": "(srs: any, elementId: string) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ReviewSubmission": {
+      "type": "ReviewSubmission",
+      "members": {
+        "acceptance_criteria_status": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ criterion: string; passed: boolean; }[] | undefined"
+        },
+        "affected_elements": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "consistency_check_result": {
+          "optional": true,
+          "readonly": false,
+          "type": "unknown"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "gate_id": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "gate_type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "summary": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "RuleDocument": {
+      "type": "RuleDocument",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "schemaMap": {
+      "type": "Record<string, any>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "SchemaTreeNode": {
+      "type": "SchemaTreeNode",
+      "members": {
+        "description": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "enum": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "format": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "items": {
+          "optional": true,
+          "readonly": false,
+          "type": "SchemaTreeNode | undefined"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "properties": {
+          "optional": true,
+          "readonly": false,
+          "type": "Record<string, SchemaTreeNode> | undefined"
+        },
+        "required": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "title": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "type": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "SchemaValidationResult": {
+      "type": "SchemaValidationResult",
+      "members": {
+        "errors": {
+          "optional": false,
+          "readonly": false,
+          "type": "ValidationError[]"
+        },
+        "isValid": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "warnings": {
+          "optional": false,
+          "readonly": false,
+          "type": "ValidationWarning[]"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "selectApprovalGate": {
+      "type": "(config: WorkflowConfig, gateType: string, gateId?: string | undefined) => ApprovalGate | undefined",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "setCurrentLocale": {
+      "type": "(locale: Locale) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "setLocaleProvider": {
+      "type": "(provider: LocaleProvider) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "sortValidationResults": {
+      "type": "(validationResults: ValidationResult[]) => ValidationResult[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "SRSRuleError": {
+      "type": "SRSRuleError",
+      "members": {
+        "details": {
+          "optional": false,
+          "readonly": true,
+          "type": "Record<string, unknown>"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "name": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "stack": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [
+        "(message: string, details?: Record<string, unknown>): SRSRuleError"
+      ],
+      "constants": {}
+    },
+    "SRSTreeManager": {
+      "type": "SRSTreeManager",
+      "members": {
+        "addMetadataBlock": {
+          "optional": false,
+          "readonly": false,
+          "type": "(filepath: string, lineNumber: number, content: string, type: \"full\" | \"partial\", path?: string | undefined) => void"
+        },
+        "exportToMarkdown": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => Map<string, string>"
+        },
+        "getSourcesFor": {
+          "optional": false,
+          "readonly": false,
+          "type": "(path: string) => MetadataLocation[]"
+        },
+        "getTree": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => ExtendedSRSTree"
+        },
+        "getValueAt": {
+          "optional": false,
+          "readonly": false,
+          "type": "(path: string) => any"
+        },
+        "loadDocument": {
+          "optional": false,
+          "readonly": false,
+          "type": "(filepath: string, content: string, commitId?: string | undefined) => void"
+        },
+        "loadDocuments": {
+          "optional": false,
+          "readonly": false,
+          "type": "(documents: { filepath: string; content: string; commitId?: string | undefined; }[]) => void"
+        },
+        "updateMetadataBlock": {
+          "optional": false,
+          "readonly": false,
+          "type": "(location: MetadataLocation, newContent: string) => void"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "SRSTreeParser": {
+      "type": "SRSTreeParser",
+      "members": {
+        "mergeMetadataBlocks": {
+          "optional": false,
+          "readonly": false,
+          "type": "(blocks: MetadataBlock[], parseErrors?: TreeValidationError[] | undefined) => ExtendedSRSTree"
+        },
+        "parseDocument": {
+          "optional": false,
+          "readonly": false,
+          "type": "(content: string, filepath: string, commitId?: string | undefined) => { blocks: MetadataBlock[]; parseErrors: TreeValidationError[]; }"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "StatusChange": {
+      "type": "StatusChange",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "element_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "file": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "new_status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "no_op": {
+          "optional": false,
+          "readonly": false,
+          "type": "boolean"
+        },
+        "original": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "previous_status": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "transformSchemaToTree": {
+      "type": "(schema: any, rootSchema?: any, name?: string | undefined) => SchemaTreeNode",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "TreeValidationError": {
+      "type": "TreeValidationError",
+      "members": {
+        "locations": {
+          "optional": false,
+          "readonly": false,
+          "type": "MetadataLocation[]"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "severity": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"error\" | \"warning\""
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "TypedDependency": {
+      "type": "TypedDependency",
+      "members": {
+        "dependency_type": {
+          "optional": true,
+          "readonly": false,
+          "type": "\"hard\" | \"soft\" | \"interface\" | undefined"
+        },
+        "ref_id": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "ref_type": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "unmetDependencies": {
+      "type": "(srs: any, element: ProjectElement, evidence?: DependencyEvidence) => TypedDependency[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "validateExtendedSRS": {
+      "type": "(data: any, fieldSources?: { [fieldPath: string]: string[]; } | undefined, fieldLocations?: { [fieldPath: string]: FieldLocation[]; } | undefined) => Promise<SchemaValidationResult>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "validateExtendedSRSFile": {
+      "type": "(content: string) => Promise<SchemaValidationResult>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "validateMultipleFiles": {
+      "type": "(files: { path: string; content: string; }[]) => Promise<Map<string, SchemaValidationResult>>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "validateYAML": {
+      "type": "(yamlContent: string, startLine?: number, targetPath?: string[] | undefined, isPartialExtraction?: boolean) => Promise<SchemaValidationResult>",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "ValidationError": {
+      "type": "ValidationError",
+      "members": {
+        "column": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "line": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "severity": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"error\" | \"warning\""
+        },
+        "sourceFile": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "type": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ValidationResult": {
+      "type": "ValidationResult",
+      "members": {
+        "column": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "level": {
+          "optional": false,
+          "readonly": false,
+          "type": "\"error\" | \"warning\" | \"info\""
+        },
+        "line": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "ValidationWarning": {
+      "type": "ValidationWarning",
+      "members": {
+        "column": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "line": {
+          "optional": true,
+          "readonly": false,
+          "type": "number | undefined"
+        },
+        "message": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "path": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "severity": {
+          "optional": true,
+          "readonly": false,
+          "type": "\"warning\" | undefined"
+        },
+        "sourceFile": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        },
+        "type": {
+          "optional": true,
+          "readonly": false,
+          "type": "string | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkflowConfig": {
+      "type": "WorkflowConfig",
+      "members": {
+        "approval_gates": {
+          "optional": true,
+          "readonly": false,
+          "type": "ApprovalGate[] | undefined"
+        },
+        "autonomy_policy": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ default_gate?: boolean | undefined; operations?: Record<string, AutonomyLevel> | undefined; } | undefined"
+        },
+        "consistency_check": {
+          "optional": true,
+          "readonly": false,
+          "type": "{ enabled?: boolean | undefined; check_on_commit?: boolean | undefined; check_fields?: string[] | undefined; strict_mode?: boolean | undefined; } | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkflowContext": {
+      "type": "WorkflowContext",
+      "members": {
+        "evaluateCondition": {
+          "optional": true,
+          "readonly": false,
+          "type": "((condition: string) => boolean | undefined) | undefined"
+        },
+        "resolveAutonomyGate": {
+          "optional": true,
+          "readonly": false,
+          "type": "((operation: string, level: Readonly<AutonomyLevel>) => boolean | undefined) | undefined"
+        },
+        "reviews": {
+          "optional": true,
+          "readonly": false,
+          "type": "readonly ReviewRecord[] | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "WorkType": {
+      "type": "\"spec\" | \"impl\" | \"verify\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "YAMLBlock": {
+      "type": "YAMLBlock",
+      "members": {
+        "content": {
+          "optional": false,
+          "readonly": false,
+          "type": "string"
+        },
+        "endLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "isPartial": {
+          "optional": true,
+          "readonly": false,
+          "type": "boolean | undefined"
+        },
+        "path": {
+          "optional": true,
+          "readonly": false,
+          "type": "string[] | undefined"
+        },
+        "startLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "yamlEndLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        },
+        "yamlStartLine": {
+          "optional": false,
+          "readonly": false,
+          "type": "number"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    }
+  },
+  "src/i18n/index.ts": {
+    "ErrorCode": {
+      "type": "ErrorCode",
+      "members": {},
+      "constructors": [],
+      "constants": {
+        "REQUIRED_FIELD": "SRS_REQUIRED_FIELD",
+        "REQUIRED_MANIFEST": "SRS_REQUIRED_MANIFEST",
+        "REQUIRED_FORMAT": "SRS_REQUIRED_FORMAT",
+        "REQUIRED_VERSION": "SRS_REQUIRED_VERSION",
+        "TYPE_MISMATCH": "SRS_TYPE_MISMATCH",
+        "TYPE_STRING_EXPECTED": "SRS_TYPE_STRING_EXPECTED",
+        "TYPE_NUMBER_EXPECTED": "SRS_TYPE_NUMBER_EXPECTED",
+        "TYPE_BOOLEAN_EXPECTED": "SRS_TYPE_BOOLEAN_EXPECTED",
+        "TYPE_OBJECT_EXPECTED": "SRS_TYPE_OBJECT_EXPECTED",
+        "TYPE_ARRAY_EXPECTED": "SRS_TYPE_ARRAY_EXPECTED",
+        "FORMAT_INVALID": "SRS_FORMAT_INVALID",
+        "FORMAT_DATE_INVALID": "SRS_FORMAT_DATE_INVALID",
+        "FORMAT_EMAIL_INVALID": "SRS_FORMAT_EMAIL_INVALID",
+        "FORMAT_URL_INVALID": "SRS_FORMAT_URL_INVALID",
+        "FORMAT_UUID_INVALID": "SRS_FORMAT_UUID_INVALID",
+        "ENUM_INVALID": "SRS_ENUM_INVALID",
+        "PATTERN_INVALID": "SRS_PATTERN_INVALID",
+        "MIN_LENGTH": "SRS_MIN_LENGTH",
+        "MAX_LENGTH": "SRS_MAX_LENGTH",
+        "MINIMUM_VALUE": "SRS_MINIMUM_VALUE",
+        "MAXIMUM_VALUE": "SRS_MAXIMUM_VALUE",
+        "ADDITIONAL_PROPERTY": "SRS_ADDITIONAL_PROPERTY",
+        "INVALID_SCHEMA": "SRS_INVALID_SCHEMA",
+        "MANIFEST_FORMAT_INVALID": "SRS_MANIFEST_FORMAT_INVALID",
+        "VERSION_FORMAT_INVALID": "SRS_VERSION_FORMAT_INVALID",
+        "TIMESTAMP_INVALID": "SRS_TIMESTAMP_INVALID",
+        "VALIDATION_ERROR": "SRS_VALIDATION_ERROR"
+      }
+    },
+    "formatErrorFromData": {
+      "type": "(errorData: any) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "formatTemplate": {
+      "type": "(template: string, context?: MessageContext) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getAvailableLocales": {
+      "type": "() => Locale[]",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getCurrentLocale": {
+      "type": "() => Locale",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getErrorCode": {
+      "type": "(error: { keyword: string; instancePath?: string | undefined; params?: any; schemaPath?: string | undefined; }) => ErrorCode",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getErrorMessage": {
+      "type": "(errorCode: ErrorCode, context?: ErrorContext) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getMessage": {
+      "type": "(bundle: MessageBundle, key: string, context?: MessageContext, locale?: Locale | undefined) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "getUIMessage": {
+      "type": "(key: string, context?: ErrorContext) => string",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "isLocaleSupported": {
+      "type": "(locale: string) => locale is Locale",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "Locale": {
+      "type": "\"en\" | \"ja\"",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "LocaleProvider": {
+      "type": "LocaleProvider",
+      "members": {
+        "getCurrentLocale": {
+          "optional": false,
+          "readonly": false,
+          "type": "() => Locale"
+        },
+        "setCurrentLocale": {
+          "optional": true,
+          "readonly": false,
+          "type": "((locale: Locale) => void) | undefined"
+        }
+      },
+      "constructors": [],
+      "constants": {}
+    },
+    "MessageBundle": {
+      "type": "MessageBundle",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "MessageContext": {
+      "type": "MessageContext",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "setCurrentLocale": {
+      "type": "(locale: Locale) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    },
+    "setLocaleProvider": {
+      "type": "(provider: LocaleProvider) => void",
+      "members": {},
+      "constructors": [],
+      "constants": {}
+    }
+  }
+}

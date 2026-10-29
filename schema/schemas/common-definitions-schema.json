@@ -1,0 +1,446 @@
+{
+  "$comment": "Copyright (c) 2026 CoLLMate, Inc. SPDX-License-Identifier: Apache-2.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://exsrs.org/extended-srs/v1/schemas/common-definitions.json",
+  "title": "共通定義",
+  "description": "複数スキーマから参照される共通型定義",
+  "definitions": {
+    "status": {
+      "type": "string",
+      "title": "ステータス",
+      "description": "要素のライフサイクル状態",
+      "enum": [
+        "draft",
+        "tentative",
+        "approved",
+        "in_progress",
+        "blocked",
+        "in_review",
+        "rejected",
+        "implemented",
+        "verified",
+        "deferred",
+        "dropped"
+      ]
+    },
+    "typedDependency": {
+      "type": "object",
+      "title": "型付き依存関係",
+      "required": [
+        "ref_id"
+      ],
+      "properties": {
+        "ref_id": {
+          "type": "string",
+          "description": "依存先要素の ID"
+        },
+        "ref_type": {
+          "type": "string",
+          "enum": [
+            "use-case",
+            "functional-requirement",
+            "non-functional-requirement",
+            "module",
+            "milestone",
+            "external-service"
+          ]
+        },
+        "dependency_type": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "soft",
+            "interface"
+          ],
+          "default": "hard",
+          "description": "hard: 完了必須 / soft: モック可 / interface: 契約のみ必要"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "dependsOn": {
+      "type": "array",
+      "title": "依存先",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/definitions/typedDependency"
+          }
+        ]
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "title": "逆依存",
+      "description": "depends_on から導出する、この要素がブロックしている他要素の ID リスト。省略可能。文書への保存・更新は利用側で行う",
+      "items": {
+        "type": "string"
+      }
+    },
+    "priority": {
+      "type": "string",
+      "title": "優先度",
+      "enum": [
+        "must",
+        "should",
+        "could",
+        "wont",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "title": "タグ",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptanceCriterion": {
+      "type": "object",
+      "title": "受け入れ条件",
+      "required": [
+        "given",
+        "when",
+        "then"
+      ],
+      "properties": {
+        "scenario": {
+          "type": "string"
+        },
+        "flow_path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "given": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "when": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "then": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "decisionRecord": {
+      "type": "object",
+      "title": "決定記録",
+      "required": [
+        "decision_id",
+        "decided_by",
+        "decision",
+        "rationale"
+      ],
+      "properties": {
+        "decision_id": {
+          "type": "string"
+        },
+        "decided_by": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "alternatives_considered": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "option": {
+                "type": "string"
+              },
+              "pros": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "cons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "rejected_reason": {
+                "type": "string"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "affected_elements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reversibility": {
+          "type": "string",
+          "enum": [
+            "reversible",
+            "costly_to_reverse",
+            "irreversible"
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "pendingDecision": {
+      "type": "object",
+      "title": "未解決の意思決定",
+      "required": [
+        "question",
+        "impact"
+      ],
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "raised_by": {
+          "type": "string"
+        },
+        "impact": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "default_assumption": {
+          "type": "string"
+        },
+        "urgency": {
+          "type": "string",
+          "enum": [
+            "blocking",
+            "important",
+            "nice_to_know"
+          ]
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "option": {
+                "type": "string"
+              },
+              "implication": {
+                "type": "string"
+              }
+            },
+            "patternProperties": {
+              "^x-": {}
+            },
+            "additionalProperties": false
+          }
+        },
+        "resolution": {
+          "type": "object",
+          "properties": {
+            "decided_by": {
+              "type": "string"
+            },
+            "answer": {
+              "type": "string"
+            },
+            "rationale": {
+              "type": "string"
+            }
+          },
+          "patternProperties": {
+            "^x-": {}
+          },
+          "additionalProperties": false
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "jsonSchema": {
+      "type": [
+        "object",
+        "boolean"
+      ],
+      "title": "JSON Schema (Draft 7)",
+      "description": "利用者が定義するデータの型。JSON Schema Draft 7 のメタスキーマで記述形式を検証する。空のスキーマと true は任意の値を許可し、false はすべての値を拒否する。参照先の解決と実データの適合性検証は利用側の役割。",
+      "properties": {
+        "$schema": {
+          "enum": [
+            "http://json-schema.org/draft-07/schema#",
+            "http://json-schema.org/draft-07/schema",
+            "https://json-schema.org/draft-07/schema#",
+            "https://json-schema.org/draft-07/schema"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "$ref": "http://json-schema.org/draft-07/schema#"
+        }
+      ]
+    }
+  },
+  "x-docs": {
+    "definition": [
+      "## 1. 共通定義とは",
+      "### 1.1 定義と本質的目的",
+      "共通定義は、複数セクション（ユースケース、機能要件、非機能要求、システムアーキテクチャ、開発実装詳細）から横断的に参照される型定義を集約したスキーマである。status、depends_on、blocks などの共通フィールドを一箇所で定義し、フィールドの型と値を共通化する。文書間の参照整合性は別途確認する。",
+      "### 1.2 ステータスライフサイクル",
+      "ライフサイクルを持つ要素は共通の11種のステータスで管理される：",
+      "",
+      "```mermaid",
+      "stateDiagram-v2",
+      "    direction LR",
+      "",
+      "    [*] --> draft",
+      "    draft --> tentative",
+      "    tentative --> approved",
+      "    approved --> in_progress",
+      "    in_progress --> in_review",
+      "    in_review --> implemented",
+      "    implemented --> verified",
+      "    verified --> [*]",
+      "",
+      "    tentative --> rejected",
+      "    in_review --> rejected",
+      "    rejected --> draft",
+      "",
+      "    in_progress --> blocked",
+      "    blocked --> in_progress",
+      "",
+      "    approved --> deferred",
+      "    deferred --> draft",
+      "    deferred --> approved",
+      "    draft --> dropped",
+      "    tentative --> dropped",
+      "    approved --> dropped",
+      "    deferred --> dropped",
+      "    dropped --> [*]",
+      "```",
+      "",
+      "| ステータス | 説明 |",
+      "|-----------|------|",
+      "| **draft** | 初期草案 |",
+      "| **tentative** | 暫定案。人間のレビュー待ち |",
+      "| **approved** | 承認済み。実装着手可能 |",
+      "| **in_progress** | 実装中 |",
+      "| **blocked** | ブロック中。依存先の完了待ち |",
+      "| **in_review** | レビュー中 |",
+      "| **rejected** | 却下。理由付きで差し戻し |",
+      "| **implemented** | 実装完了。検証待ち |",
+      "| **verified** | 検証済み。受け入れ条件合格 |",
+      "| **deferred** | 保留。将来のフェーズで対応 |",
+      "| **dropped** | 取消。対応しないことを決定 |",
+      "",
+      "ユースケース、機能要件、非機能要求、モジュール、マイルストーンの `status` は任意。公式 core は省略時を `draft` として扱う。",
+      "### 1.3 型付き依存関係",
+      "依存関係を文字列IDだけでなく、型情報を含むオブジェクトとして記述できる：",
+      "",
+      "| フィールド | 説明 |",
+      "|-----------|------|",
+      "| **ref_id** | 依存先要素のID（必須） |",
+      "| **ref_type** | 依存先の種別（use-case, functional-requirement, module等） |",
+      "| **dependency_type** | hard（完了必須）/ soft（モック可）/ interface（契約のみ） |",
+      "",
+      "`depends_on` 配列には文字列と `typedDependency` オブジェクトを混在可能。",
+      "### 1.4 逆依存（blocks）",
+      "`blocks` は「この要素が何をブロックしているか」を示す逆依存リスト。`depends_on` から導出する省略可能なフィールドである。公式 core は状態取得時に逆依存を計算するが、文書の `blocks` は自動更新しない。"
+    ],
+    "best_practices": [
+      "## 2. ベストプラクティス",
+      "### 2.1 ステータス管理",
+      "1. **段階的な遷移**",
+      "   - draft → tentative → approved の順に進める",
+      "   - ステータスのスキップ（draft → approved）は承認ゲートの設定次第",
+      "   - rejected時は理由を添えて draft に戻す",
+      "2. **ブロック状態の管理**",
+      "   - blocked は depends_on の未完了要素がある場合に設定",
+      "   - エージェントが自動検出・自動設定することを推奨",
+      "   - blocked解除はblocking要素の完了を条件とする",
+      "### 2.2 依存関係の記述",
+      "1. **簡潔な依存は文字列IDで**",
+      "   ```yaml",
+      "   depends_on: [\"UC-001\", \"FR-003\"]",
+      "   ```",
+      "2. **詳細な依存は型付きオブジェクトで**",
+      "   ```yaml",
+      "   depends_on:",
+      "     - ref_id: \"UC-001\"",
+      "       ref_type: \"use-case\"",
+      "       dependency_type: \"hard\"",
+      "     - ref_id: \"EXT-API\"",
+      "       ref_type: \"external-service\"",
+      "       dependency_type: \"interface\"",
+      "   ```",
+      "3. **blocksは記述不要**",
+      "   - `depends_on` から導出し、文書に残す場合は利用側で更新する",
+      "### 2.3 優先度の使い分け",
+      "MoSCoW法（must/should/could/wont）または3段階（high/medium/low）を混在させず、プロジェクト内で統一すること。"
+    ],
+    "examples": [
+      "## 3. 実例",
+      "### 3.1 ステータスと依存関係の記述例",
+      "```yaml",
+      "# ユースケースでの使用例",
+      "<!--@srs: use-cases: list[0]",
+      "uc_id: \"UC-001\"",
+      "name: \"ユーザー登録\"",
+      "status: \"approved\"",
+      "depends_on:",
+      "  - ref_id: \"NFR-SEC-001\"",
+      "    ref_type: \"non-functional-requirement\"",
+      "    dependency_type: \"hard\"",
+      "  - \"EXT-AUTH-SERVICE\"",
+      "@srs-->",
+      "```",
+      "### 3.2 機能要件でのステータス管理例",
+      "```yaml",
+      "<!--@srs: functional-requirements: requirements[0]",
+      "fr_id: \"FR-001\"",
+      "name: \"ユーザー認証\"",
+      "status: \"in_progress\"",
+      "depends_on: [\"UC-001\"]",
+      "blocks: [\"FR-002\", \"FR-003\"]",
+      "@srs-->",
+      "```"
+    ]
+  }
+}

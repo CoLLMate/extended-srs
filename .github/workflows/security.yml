@@ -1,0 +1,45 @@
+# Copyright (c) 2026 CoLLMate, Inc.
+# SPDX-License-Identifier: Apache-2.0
+name: Security
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trivy:
+    name: Trivy (${{ matrix.scan }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - scan: vulnerabilities
+            scanners: vuln,misconfig
+            severity: HIGH,CRITICAL
+          - scan: secrets
+            scanners: secret
+            severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Scan repository
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.1
+          scan-type: fs
+          scan-ref: .
+          trivy-config: .trivy/config.yaml
+          scanners: ${{ matrix.scanners }}
+          severity: ${{ matrix.severity }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: 'false'
+          timeout: 5m0s

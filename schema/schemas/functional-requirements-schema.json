@@ -1,0 +1,1612 @@
+{
+  "$comment": "Copyright (c) 2026 CoLLMate, Inc. SPDX-License-Identifier: Apache-2.0",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://exsrs.org/extended-srs/v1/schemas/functional-requirements.json",
+  "type": "object",
+  "title": "機能要件",
+  "description": "システムが提供する機能の詳細定義",
+  "properties": {
+    "data_models": {
+      "type": "array",
+      "title": "データモデル",
+      "description": "システムで使用するデータの定義",
+      "items": {
+        "$ref": "#/definitions/dataModel"
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "title": "個別の機能要件リスト",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/functionalRequirement"
+      }
+    }
+  },
+  "definitions": {
+    "dataModel": {
+      "type": "object",
+      "required": [
+        "data_id",
+        "name",
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "data_id": {
+          "type": "string",
+          "title": "データID",
+          "description": "データモデルの一意識別子。推奨：意味のある名前（例：user-profile、order-items）"
+        },
+        "name": {
+          "type": "string",
+          "title": "データ名",
+          "description": "データモデルの名称（ビジネス名）"
+        },
+        "system_name": {
+          "type": "string",
+          "title": "システム名",
+          "description": "システム実装時の名称（オプション）"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "master",
+            "transaction",
+            "reference",
+            "log"
+          ],
+          "title": "タイプ",
+          "description": "master/transaction/reference/log"
+        },
+        "attributes": {
+          "type": "array",
+          "title": "属性",
+          "description": "データ項目の定義",
+          "items": {
+            "$ref": "#/definitions/dataAttribute"
+          }
+        },
+        "characteristics": {
+          "$ref": "#/definitions/dataCharacteristics"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "dataAttribute": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "required",
+        "description"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "属性名",
+          "description": "項目の識別名（ビジネス名）"
+        },
+        "system_name": {
+          "type": "string",
+          "title": "システム名",
+          "description": "実装時の名称（オプション）"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "date",
+            "datetime",
+            "uuid",
+            "id",
+            "integer",
+            "decimal",
+            "float",
+            "enum",
+            "json",
+            "array"
+          ],
+          "title": "データ型",
+          "description": "データ型定義"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "必須",
+          "description": "true/false"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "属性の意味"
+        },
+        "max_length": {
+          "type": "number",
+          "title": "最大長",
+          "description": "文字列型の場合"
+        },
+        "precision": {
+          "type": "number",
+          "title": "精度",
+          "description": "decimal型の場合の全体桁数"
+        },
+        "scale": {
+          "type": "number",
+          "title": "スケール",
+          "description": "decimal型の場合の小数点以下桁数"
+        },
+        "values": {
+          "type": "array",
+          "title": "値リスト",
+          "description": "enum型の場合の選択肢",
+          "items": {
+            "type": "string"
+          }
+        },
+        "default": {
+          "title": "デフォルト値",
+          "description": "初期値"
+        },
+        "conversion": {
+          "type": "string",
+          "title": "変換",
+          "description": "データ変換ルール（オプション）"
+        },
+        "constraints": {
+          "type": "array",
+          "title": "制約",
+          "description": "データ制約条件",
+          "items": {
+            "type": "string",
+            "description": "制約条件（primary_key/unique/not_null/foreign_key等）"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "dataCharacteristics": {
+      "type": "object",
+      "title": "データ特性",
+      "description": "データの運用特性",
+      "properties": {
+        "update_frequency": {
+          "type": "string",
+          "title": "更新頻度",
+          "description": "更新タイミング"
+        },
+        "volume": {
+          "type": "string",
+          "title": "データ量",
+          "description": "想定件数や容量"
+        },
+        "retention": {
+          "type": "string",
+          "title": "保存期間",
+          "description": "データ保管期間"
+        },
+        "partitioning": {
+          "type": "string",
+          "title": "パーティション",
+          "description": "分割方法"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "functionalRequirement": {
+      "type": "object",
+      "required": [
+        "req_id",
+        "name",
+        "priority",
+        "acceptance_criteria"
+      ],
+      "properties": {
+        "req_id": {
+          "type": "string",
+          "title": "要件ID",
+          "description": "機能要件の一意識別子。推奨：機能を表す意味のある名前（例：user-registration、product-search）"
+        },
+        "name": {
+          "type": "string",
+          "title": "要件名",
+          "description": "機能の名称"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "must",
+            "should",
+            "could",
+            "wont",
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "優先度",
+          "description": "high/medium/low"
+        },
+        "actors": {
+          "type": "array",
+          "title": "アクター",
+          "description": "この機能に関わるアクター名のリスト",
+          "items": {
+            "type": "string"
+          }
+        },
+        "used_data": {
+          "type": "array",
+          "title": "使用データ",
+          "description": "この機能で使用するデータIDの参照",
+          "items": {
+            "type": "string"
+          }
+        },
+        "processing_details": {
+          "$ref": "#/definitions/processingDetails"
+        },
+        "ui_specifications": {
+          "type": "array",
+          "title": "UI仕様",
+          "description": "ユーザーインターフェースの定義",
+          "items": {
+            "$ref": "#/definitions/uiSpecification"
+          }
+        },
+        "acceptance_criteria": {
+          "$ref": "#/definitions/functionalAcceptanceCriteria"
+        },
+        "status": {
+          "$ref": "common-definitions-schema.json#/definitions/status"
+        },
+        "tags": {
+          "$ref": "common-definitions-schema.json#/definitions/tags"
+        },
+        "depends_on": {
+          "$ref": "common-definitions-schema.json#/definitions/dependsOn"
+        },
+        "blocks": {
+          "$ref": "common-definitions-schema.json#/definitions/blocks"
+        },
+        "traceability": {
+          "$ref": "#/definitions/traceability"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "processingDetails": {
+      "type": "object",
+      "title": "処理詳細",
+      "description": "処理の詳細仕様",
+      "properties": {
+        "preconditions": {
+          "$ref": "#/definitions/preconditions"
+        },
+        "postconditions": {
+          "type": "array",
+          "title": "事後条件",
+          "description": "実行後に保証される状態のリスト",
+          "items": {
+            "type": "string"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "title": "ステップ定義",
+          "description": "すべての処理ステップを統一的に定義",
+          "items": {
+            "$ref": "#/definitions/processingStep"
+          }
+        },
+        "flows": {
+          "$ref": "#/definitions/processingFlows"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "processingStep": {
+      "type": "object",
+      "required": [
+        "id",
+        "actor",
+        "description",
+        "next"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "ステップID",
+          "description": "処理ステップの一意識別子。推奨：処理内容を表す名前（例：validate-input、call-api、show-results）"
+        },
+        "actor": {
+          "type": "string",
+          "title": "アクター",
+          "description": "実行主体（事前定義されたアクター名）"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "アクションや処理の内容"
+        },
+        "preconditions": {
+          "$ref": "#/definitions/preconditions"
+        },
+        "screen_ui": {
+          "$ref": "#/definitions/screenUIReference"
+        },
+        "api_reference": {
+          "type": "string",
+          "title": "API参照",
+          "description": "関連するAPIのID"
+        },
+        "validations": {
+          "type": "array",
+          "title": "検証ルール",
+          "description": "このステップで実行される検証",
+          "items": {
+            "$ref": "#/definitions/stepValidation"
+          }
+        },
+        "external_service": {
+          "$ref": "#/definitions/externalServiceCall"
+        },
+        "business_errors": {
+          "type": "array",
+          "title": "ビジネスエラー",
+          "description": "このステップで発生する可能性のあるビジネスエラーと対処",
+          "items": {
+            "$ref": "#/definitions/businessError"
+          }
+        },
+        "next": {
+          "type": "array",
+          "title": "次のステップ",
+          "description": "遷移先の定義（エラー時の遷移も含む）",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/nextStep"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "screenUIReference": {
+      "type": "object",
+      "title": "UI関連",
+      "description": "UI画面に関する情報（オプション）",
+      "properties": {
+        "screen": {
+          "type": "string",
+          "title": "画面参照",
+          "description": "関連する画面のID"
+        },
+        "state": {
+          "type": "string",
+          "title": "UI状態",
+          "description": "画面の状態ID"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "stepValidation": {
+      "type": "object",
+      "required": [
+        "validation_id",
+        "target",
+        "condition",
+        "error_message"
+      ],
+      "properties": {
+        "validation_id": {
+          "type": "string",
+          "title": "検証ID",
+          "description": "検証ルールの識別子。推奨：検証内容を表す名前（例：email-format、required-field）"
+        },
+        "target": {
+          "type": "string",
+          "title": "対象",
+          "description": "検証対象の項目"
+        },
+        "condition": {
+          "type": "string",
+          "title": "条件",
+          "description": "検証条件の論理式"
+        },
+        "error_message": {
+          "type": "string",
+          "title": "エラーメッセージ",
+          "description": "検証失敗時の表示"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "externalServiceCall": {
+      "type": "object",
+      "required": [
+        "name",
+        "operation"
+      ],
+      "title": "外部サービス連携",
+      "description": "外部APIの呼び出し",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "サービス名",
+          "description": "外部サービスの名称"
+        },
+        "operation": {
+          "type": "string",
+          "title": "操作",
+          "description": "実行する操作の内容"
+        },
+        "timeout": {
+          "type": "number",
+          "title": "タイムアウト",
+          "description": "ミリ秒単位"
+        },
+        "retry": {
+          "type": "number",
+          "title": "リトライ回数",
+          "description": "再試行回数"
+        },
+        "async": {
+          "type": "boolean",
+          "title": "非同期フラグ",
+          "description": "非同期実行の場合true"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "nextStep": {
+      "type": "object",
+      "required": [
+        "step",
+        "condition"
+      ],
+      "properties": {
+        "step": {
+          "type": "string",
+          "title": "ステップID",
+          "description": "遷移先のステップID（処理ステップのIDまたは'END'）"
+        },
+        "condition": {
+          "$ref": "#/definitions/transitionCondition"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "transitionCondition": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "title": "遷移条件",
+      "description": "ステップ遷移の条件定義",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "always",
+            "success",
+            "error",
+            "business_error",
+            "validation_error",
+            "ui_event",
+            "external_event",
+            "timeout"
+          ],
+          "title": "条件タイプ",
+          "description": "遷移条件の種類"
+        },
+        "value": {
+          "type": "string",
+          "title": "条件値",
+          "description": "条件タイプに応じた具体的な値（エラーコード、イベント名、フィールドIDなど）"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "条件の詳細説明（オプション）"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "processingFlows": {
+      "type": "object",
+      "title": "フロー分類",
+      "description": "テストシナリオ用のステップ分類",
+      "properties": {
+        "main_flow": {
+          "type": "array",
+          "title": "主要フロー",
+          "description": "正常系のステップIDリスト",
+          "items": {
+            "type": "string"
+          }
+        },
+        "alternative_flows": {
+          "type": "array",
+          "title": "代替フロー",
+          "description": "分岐処理のグループ",
+          "items": {
+            "$ref": "#/definitions/namedFlow"
+          }
+        },
+        "exception_flows": {
+          "type": "array",
+          "title": "例外フロー",
+          "description": "エラー処理のグループ",
+          "items": {
+            "$ref": "#/definitions/namedFlow"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "namedFlow": {
+      "type": "object",
+      "required": [
+        "name",
+        "steps"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "フロー名",
+          "description": "フローの名称"
+        },
+        "steps": {
+          "type": "array",
+          "title": "ステップリスト",
+          "description": "含まれるステップID",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "uiSpecification": {
+      "type": "object",
+      "required": [
+        "ui_id",
+        "name",
+        "type"
+      ],
+      "properties": {
+        "ui_id": {
+          "type": "string",
+          "title": "UI ID",
+          "description": "UI要素の一意識別子。推奨：画面や機能を表す名前（例：login-form、product-list、order-confirmation）"
+        },
+        "name": {
+          "type": "string",
+          "title": "UI名",
+          "description": "UIの名称"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "web",
+            "mobile",
+            "api",
+            "report"
+          ],
+          "title": "タイプ",
+          "description": "web/mobile/api/report"
+        },
+        "states": {
+          "type": "array",
+          "title": "UI状態",
+          "description": "UIの取りうる状態の定義",
+          "items": {
+            "$ref": "#/definitions/uiState"
+          }
+        },
+        "screen_design": {
+          "$ref": "#/definitions/screenDesign"
+        },
+        "api_specs": {
+          "$ref": "#/definitions/apiSpecs"
+        },
+        "report_settings": {
+          "$ref": "#/definitions/reportSettings"
+        },
+        "technical_design": {
+          "$ref": "#/definitions/technicalDesign"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "uiState": {
+      "type": "object",
+      "required": [
+        "state_id",
+        "name"
+      ],
+      "properties": {
+        "state_id": {
+          "type": "string",
+          "title": "状態ID",
+          "description": "UI状態の識別子。推奨：状態を表す名前（例：loading、error、success、editing）"
+        },
+        "name": {
+          "type": "string",
+          "title": "状態名",
+          "description": "状態の名称"
+        },
+        "description": {
+          "type": "string",
+          "title": "説明",
+          "description": "状態の詳細説明"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "screenDesign": {
+      "type": "object",
+      "title": "画面設計",
+      "description": "画面要素の定義",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "title": "セクション",
+          "description": "画面の区分",
+          "items": {
+            "$ref": "#/definitions/screenSection"
+          }
+        },
+        "field_specifications": {
+          "type": "array",
+          "title": "フィールド仕様",
+          "description": "入力項目の定義",
+          "items": {
+            "$ref": "#/definitions/fieldSpecification"
+          }
+        },
+        "state_variations": {
+          "type": "array",
+          "title": "状態バリエーション",
+          "description": "状態ごとの画面変更定義",
+          "items": {
+            "$ref": "#/definitions/stateVariation"
+          }
+        },
+        "mockup": {
+          "$ref": "#/definitions/mockup"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "screenSection": {
+      "type": "object",
+      "required": [
+        "section_id",
+        "title"
+      ],
+      "properties": {
+        "section_id": {
+          "type": "string",
+          "title": "セクションID",
+          "description": "画面セクションの識別子。推奨：セクションの役割を表す名前（例：header、search-filters、results-list）"
+        },
+        "title": {
+          "type": "string",
+          "title": "タイトル",
+          "description": "セクションの見出し"
+        },
+        "display_items": {
+          "type": "array",
+          "title": "表示項目",
+          "description": "セクション内の項目リスト",
+          "items": {
+            "type": "string"
+          }
+        },
+        "display_condition": {
+          "type": "string",
+          "title": "表示条件",
+          "description": "条件付き表示の論理式"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "fieldSpecification": {
+      "type": "object",
+      "required": [
+        "field_id",
+        "label"
+      ],
+      "properties": {
+        "field_id": {
+          "type": "string",
+          "title": "フィールドID",
+          "description": "入力フィールドの識別子。推奨：フィールドの用途を表す名前（例：email-input、password-field、search-keyword）"
+        },
+        "label": {
+          "type": "string",
+          "title": "ラベル",
+          "description": "表示名"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "password",
+            "email",
+            "number",
+            "date",
+            "datetime",
+            "select",
+            "radio",
+            "checkbox",
+            "textarea",
+            "button",
+            "file"
+          ],
+          "title": "フィールドタイプ",
+          "description": "フィールドの種類"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "必須フラグ",
+          "description": "true/false"
+        },
+        "help_text": {
+          "type": "string",
+          "title": "ヘルプ",
+          "description": "説明文"
+        },
+        "validation": {
+          "type": "array",
+          "title": "検証",
+          "description": "検証ルールのリスト",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "stateVariation": {
+      "type": "object",
+      "required": [
+        "state_ref"
+      ],
+      "properties": {
+        "state_ref": {
+          "type": "string",
+          "title": "状態参照",
+          "description": "対象のUI状態ID"
+        },
+        "sections": {
+          "type": "array",
+          "title": "セクション変更",
+          "description": "この状態でのセクション定義",
+          "items": {
+            "$ref": "#/definitions/sectionModification"
+          }
+        },
+        "field_modifications": {
+          "type": "array",
+          "title": "フィールド変更",
+          "description": "フィールドレベルの変更",
+          "items": {
+            "$ref": "#/definitions/fieldModification"
+          }
+        },
+        "additional_sections": {
+          "type": "array",
+          "title": "追加セクション",
+          "description": "この状態で追加されるセクション",
+          "items": {
+            "$ref": "#/definitions/screenSection"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "sectionModification": {
+      "type": "object",
+      "properties": {
+        "section_id": {
+          "type": "string",
+          "title": "セクションID",
+          "description": "変更対象のセクションID"
+        },
+        "modifications": {
+          "type": "array",
+          "title": "変更内容",
+          "description": "セクション内の変更",
+          "items": {
+            "$ref": "#/definitions/itemModification"
+          }
+        },
+        "additional_items": {
+          "type": "array",
+          "title": "追加項目",
+          "description": "この状態で追加される項目",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "itemModification": {
+      "type": "object",
+      "properties": {
+        "field_ref": {
+          "type": "string",
+          "title": "フィールド参照",
+          "description": "対象フィールドID（特定のフィールドIDまたは'*'で全フィールド）"
+        },
+        "property": {
+          "type": "string",
+          "title": "プロパティ",
+          "description": "変更する属性名"
+        },
+        "value": {
+          "title": "値",
+          "description": "変更後の値"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "fieldModification": {
+      "type": "object",
+      "properties": {
+        "field_ref": {
+          "type": "string",
+          "title": "フィールド参照",
+          "description": "対象フィールドID"
+        },
+        "properties": {
+          "type": "array",
+          "title": "プロパティ",
+          "description": "変更する属性リスト",
+          "items": {
+            "$ref": "#/definitions/propertyChange"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "propertyChange": {
+      "type": "object",
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "属性名",
+          "description": "変更する属性"
+        },
+        "value": {
+          "title": "値",
+          "description": "変更後の値"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "mockup": {
+      "type": "object",
+      "required": [
+        "type",
+        "content"
+      ],
+      "title": "モックアップ",
+      "description": "UIイメージ",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ascii-art",
+            "image-base64",
+            "image-url",
+            "figma-url"
+          ],
+          "title": "タイプ",
+          "description": "ascii-art/image-base64/image-url/figma-url"
+        },
+        "content": {
+          "type": "string",
+          "title": "コンテンツ",
+          "description": "タイプに応じた内容"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "apiSpecs": {
+      "type": "object",
+      "title": "API仕様",
+      "description": "APIの定義",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "title": "エンドポイント",
+          "description": "APIパス"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH"
+          ],
+          "title": "メソッド",
+          "description": "HTTPメソッド"
+        },
+        "request_format": {
+          "type": "string",
+          "enum": [
+            "JSON",
+            "XML",
+            "form-data",
+            "x-www-form-urlencoded"
+          ],
+          "title": "リクエスト形式",
+          "description": "リクエストのコンテンツタイプ"
+        },
+        "response_format": {
+          "type": "string",
+          "enum": [
+            "JSON",
+            "XML",
+            "HTML",
+            "text",
+            "binary"
+          ],
+          "title": "レスポンス形式",
+          "description": "レスポンスのコンテンツタイプ"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "reportSettings": {
+      "type": "object",
+      "title": "レポート設定",
+      "description": "帳票の定義",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "title": "目的",
+          "description": "レポートの用途"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "PDF",
+            "Excel",
+            "CSV",
+            "HTML"
+          ],
+          "title": "形式",
+          "description": "出力形式"
+        },
+        "distribution": {
+          "type": "string",
+          "title": "配布",
+          "description": "配布方法とタイミング"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "technicalDesign": {
+      "type": "object",
+      "title": "技術設計",
+      "description": "技術観点の設計要素",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "title": "フレームワーク",
+          "description": "使用フレームワーク"
+        },
+        "responsive": {
+          "type": "string",
+          "title": "レスポンシブ",
+          "description": "対応方針"
+        },
+        "accessibility": {
+          "type": "string",
+          "title": "アクセシビリティ",
+          "description": "対応レベル"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "functionalAcceptanceCriteria": {
+      "type": "array",
+      "title": "受け入れ条件",
+      "description": "機能の完成基準（GWT形式）",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/acceptanceCriterion"
+      }
+    },
+    "acceptanceCriterion": {
+      "type": "object",
+      "required": [
+        "given",
+        "when",
+        "then"
+      ],
+      "properties": {
+        "scenario": {
+          "type": "string",
+          "title": "シナリオ名",
+          "description": "シナリオ名（オプション）"
+        },
+        "given": {
+          "type": "array",
+          "title": "前提条件",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "when": {
+          "type": "array",
+          "title": "実行アクション",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "then": {
+          "type": "array",
+          "title": "期待結果",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "preconditions": {
+      "type": "object",
+      "title": "事前条件",
+      "description": "ステップ実行前に満たすべき条件",
+      "properties": {
+        "required_steps": {
+          "type": "array",
+          "title": "必須先行ステップ",
+          "description": "このステップ実行前に完了している必要があるステップIDのリスト（Join操作）",
+          "items": {
+            "type": "string"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "title": "条件",
+          "description": "ビジネスルールやシステム状態に関する条件のリスト",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "businessError": {
+      "type": "object",
+      "required": [
+        "error_code",
+        "message"
+      ],
+      "properties": {
+        "error_code": {
+          "type": "string",
+          "title": "エラーコード",
+          "description": "ビジネスエラーの識別コード（例：INSUFFICIENT_BALANCE、INVALID_COUPON）"
+        },
+        "message": {
+          "type": "string",
+          "title": "メッセージ",
+          "description": "ユーザーに表示するエラーメッセージ"
+        },
+        "user_action": {
+          "type": "string",
+          "title": "ユーザーアクション",
+          "description": "ユーザーが取るべき対処法"
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    },
+    "traceability": {
+      "type": "object",
+      "title": "トレーサビリティ",
+      "description": "追跡可能性",
+      "properties": {
+        "use_cases": {
+          "type": "array",
+          "title": "関連ユースケース",
+          "description": "対応するユースケースIDのリスト",
+          "items": {
+            "type": "string"
+          }
+        },
+        "domain_entities": {
+          "type": "array",
+          "title": "関連ドメインエンティティ",
+          "description": "関連するエンティティ名のリスト",
+          "items": {
+            "type": "string"
+          }
+        },
+        "non_functional_requirements": {
+          "type": "array",
+          "title": "関連非機能要件",
+          "description": "参照する非機能要件IDのリスト",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-docs": {
+    "definition": [
+      "## 1. 機能要件とは",
+      "### 1.1 定義と目的",
+      "機能要件（Functional Requirements）は、システムが提供すべき具体的な機能と振る舞いを詳細に定義したものである。ユースケースで定義された「何を作るか（WHAT）」を、「どう実現するか（HOW）」の観点で具体化する。",
+      "### 1.2 機能要件の本質",
+      "- **具体性**: 実装可能なレベルまで詳細化された仕様",
+      "- **包括性**: ビジネス要件から技術仕様まで網羅",
+      "- **トレーサビリティ**: ユースケースから実装まで追跡可能",
+      "- **検証可能性**: 明確な受け入れ条件を持つ",
+      "- **データの一元管理**: システム全体で共有されるデータを統合的に管理",
+      "- **AI制御メタデータ**: status（11段階ライフサイクル）/ tags / depends_on（型付き依存関係対応）/ blocks（逆依存）により、AIエージェントが作業スコープと実装順序を自律的に判断可能",
+      "### 1.3 他要素との関係",
+      "```",
+      "ユースケース（アクターとシステムの相互作用）",
+      "    ↓ 実現",
+      "機能要件（具体的な機能仕様）",
+      "    ↓ 実装",
+      "システム設計（技術的な実現方法）",
+      "```",
+      "### 1.4 データモデルの一元管理",
+      "機能要件では、システム全体で共有されるデータを`data_models`セクションで一元管理する。個別の機能要件からは`used_data`で参照のみを行い、データの重複定義を避ける。参照先の存在と意味的な整合性は別途確認する。"
+    ],
+    "components": [
+      "## 2. 主要コンポーネントの概念整理",
+      "### 2.1 処理フローの有向グラフ表現",
+      "処理詳細（processing_details）の`steps`は、各ステップを頂点、`next`による遷移を辺とする有向グラフを形成する：",
+      "- **頂点（ステップ）**: 一意のIDを持つ処理単位",
+      "- **辺（遷移）**: 構造化された条件付きの次ステップへの参照",
+      "- **並行処理**: 1つのステップから複数の`next`（Fork）",
+      "- **同期**: `preconditions.required_steps`による合流（Join）",
+      "",
+      "### 2.2 統一的な遷移条件モデル",
+      "すべての遷移を`transitionCondition`で統一的に表現：",
+      "- **always**: 無条件遷移",
+      "- **success/error**: 処理結果による分岐",
+      "- **business_error**: ビジネスエラーコードによる分岐",
+      "- **ui_event**: UIイベント（クリック、入力等）による遷移",
+      "- **validation_error**: 検証エラーによる分岐",
+      "",
+      "### 2.3 UI状態管理モデル",
+      "UIの動的な振る舞いを `states` と `screen_design.state_variations` で管理：",
+      "- **基本状態**: 初期状態でのUI構成",
+      "- **状態遷移**: 処理の進行に応じたUI変化",
+      "- **動的変更**: フィールドの有効/無効化、表示/非表示",
+      "- **追加要素**: エラー時のメッセージ表示など",
+      "",
+      "### 2.4 GWT形式の受け入れ条件",
+      "受け入れ条件（acceptance_criteria）は、Given-When-Then形式で構造化：",
+      "- **Given（前提条件）**: テスト開始時のシステム状態",
+      "- **When（実行アクション）**: 実行する操作",
+      "- **Then（期待結果）**: 期待される結果",
+      "- **統一的な基準**: 機能とビジネスルールを区別せず、すべて受け入れ条件として記述",
+      "",
+      "### 2.5 AI制御メタデータ",
+      "各機能要件に以下のメタデータを付与可能：",
+      "- **status**: ライフサイクル状態（draft → tentative → approved → in_progress → in_review → implemented → verified。blocked / rejected / deferred / dropped も使用可能）",
+      "- **tags**: 横断的分類ラベル（例：[\"MVP\", \"auth\", \"phase-1\"]）",
+      "- **depends_on**: 依存先要件ID（トポロジカルソートによる実装順序決定に使用）",
+      "- **priority**: MoSCoW方式を推奨（must / should / could / wont）。high / medium / low も使用可",
+      "",
+      "### 2.6 拡張プロパティ（x-プレフィクス）",
+      "すべての定義で `x-` プレフィクス付きプロパティが使用可能：",
+      "```markdown",
+      "<!--@srs: functional-requirements: requirements[0]",
+      "req_id: \"user-registration\"",
+      "name: \"ユーザー登録\"",
+      "priority: \"must\"",
+      "acceptance_criteria:",
+      "  - given: [\"未登録の利用者\"]",
+      "    when: [\"登録フォームを送信する\"]",
+      "    then: [\"アカウントが作成される\"]",
+      "x-implementation-notes: \"Supabase Auth の signUp() を使用\"",
+      "x-generated-files:",
+      "  - \"src/features/auth/register.ts\"",
+      "  - \"src/features/auth/register.test.ts\"",
+      "@srs-->",
+      "```"
+    ],
+    "best_practices": [
+      "## 3. ベストプラクティス",
+      "### 3.1 データモデルの設計原則",
+      "1. **一元管理の徹底**",
+      "   - すべてのデータモデルを`data_models`セクションで定義",
+      "   - 個別機能からは`used_data`で参照のみ",
+      "   - データの重複定義を絶対に避ける",
+      "",
+      "2. **ビジネス名とシステム名のマッピング**",
+      "   - `name`: ビジネス用語での名称",
+      "   - `system_name`: 実装時の物理名（オプション）",
+      "   - 両者の対応関係を明確に管理",
+      "",
+      "3. **データ型と制約の明確化**",
+      "   - 適切なデータ型の選択（基本型、識別子型、数値型など）",
+      "   - 必要な制約条件の定義（キー制約、NULL制約、値制約など）",
+      "",
+      "### 3.2 処理フローの記述指針",
+      "1. **ステップの粒度**",
+      "   - 1ステップ = 1つの明確なアクションまたは処理",
+      "   - アクターの切り替わりで必ずステップを分割",
+      "   - 検証処理は独立したステップとして定義",
+      "",
+      "2. **遷移条件の明確化**",
+      "   - `always`: 無条件遷移",
+      "   - エラー条件: 「検証失敗」「タイムアウト」など",
+      "   - ユーザー操作: 「ボタンクリック」「リンククリック」など",
+      "",
+      "3. **フロー分類の活用**",
+      "   - `main_flow`: 正常系の主要パス",
+      "   - `alternative_flows`: 正常系のバリエーション",
+      "   - `exception_flows`: エラー処理パス",
+      "",
+      "### 3.3 UI仕様の構造化",
+      "1. **状態管理の設計**",
+      "   - 基本状態と各種バリエーション状態を定義",
+      "   - 状態遷移のトリガーを明確化",
+      "   - 各状態でのUI変更を`state_variations`で管理",
+      "",
+      "2. **セクションとフィールドの体系化**",
+      "   - 論理的なセクション分割（SEC001形式）",
+      "   - フィールドの一意識別（FLD001形式）",
+      "   - 条件付き表示の論理式定義",
+      "",
+      "### 3.4 命名規則の推奨事項",
+      "- **req_id**: 機能を表す意味のある名前（user-registration、product-search）",
+      "- **step_id**: 処理内容を表す名前（validate-input、call-api）",
+      "- **ui_id**: 画面や機能を表す名前（login-form、order-confirmation）",
+      "- **data_id**: エンティティを表す名前（user-profile、order-items）",
+      "- **field_id**: フィールドの用途を表す名前（email-input、search-keyword）",
+      "- **section_id**: セクションの役割を表す名前（header、results-list）",
+      "- **validation_id**: 検証内容を表す名前（email-format、required-field）",
+      "- **state_id**: 状態を表す名前（loading、error、success）",
+      "",
+      "### 3.5 MoSCoW優先度の活用",
+      "- **must**: MVPに必須。これがなければプロダクトが成立しない",
+      "- **should**: 重要だが、初回リリースでは代替手段で凌げる",
+      "- **could**: あれば望ましいが、なくても大きな影響はない",
+      "- **wont**: 今回のスコープでは実装しないと明示的に決定",
+      "",
+      "MoSCoWの`wont`は「何を作らないか」を明示する点で、AIエージェントのスコープ制御に特に有用である。",
+      "",
+      "### 3.6 AIコントロールメタデータ",
+      "各機能要件には以下のフィールドが用意されている：",
+      "- **`status`**: 共通定義の11段階ステータス（draft / tentative / approved / in_progress / blocked / in_review / rejected / implemented / verified / deferred / dropped）。省略時はdraft",
+      "- **`depends_on`**: 文字列IDまたは型付きオブジェクト（ref_id + ref_type + dependency_type）の配列。dependency_type で hard / soft / interface を区別",
+      "- **`blocks`**: 逆依存（`depends_on` から導出。文書への保存は利用側で行う）",
+      "- **`tags`**: 横断的分類ラベル"
+    ],
+    "examples": [
+      "## 4. 実例",
+      "部分抽出のパスは配置例。既存要素に追記する例では、配列の添字を対象文書に合わせる。",
+      "### 4.1 データモデルの定義例",
+      "```markdown",
+      "<!--@srs: functional-requirements",
+      "data_models:",
+      "  - data_id: \"product\"",
+      "    name: \"商品\"  # ビジネス名",
+      "    system_name: \"products\"  # 実装時のテーブル名",
+      "    type: \"master\"",
+      "    attributes:",
+      "      - name: \"商品ID\"",
+      "        system_name: \"product_id\"",
+      "        type: \"uuid\"",
+      "        required: true",
+      "        description: \"商品の一意識別子\"",
+      "        constraints:",
+      "          - \"primary_key\"",
+      "      - name: \"価格\"",
+      "        system_name: \"price\"",
+      "        type: \"decimal\"",
+      "        required: true",
+      "        precision: 10",
+      "        scale: 2",
+      "        description: \"販売価格（税込）\"",
+      "        constraints:",
+      "          - \"min: 0\"",
+      "    characteristics:",
+      "      update_frequency: \"日次バッチ\"",
+      "      retention: \"無期限\"",
+      "@srs-->",
+      "```",
+      "",
+      "### 4.1.1 機能要件の定義例（AI制御メタデータ付き）",
+      "```markdown",
+      "<!--@srs: functional-requirements",
+      "requirements:",
+      "  - req_id: \"product-search\"",
+      "    name: \"商品検索\"",
+      "    priority: \"must\"",
+      "    status: \"approved\"",
+      "    tags: [\"MVP\", \"search\", \"phase-1\"]",
+      "    depends_on: [\"product-master-import\"]",
+      "    actors: [\"顧客\"]",
+      "    used_data: [\"product\"]",
+      "    acceptance_criteria:",
+      "      - given: [\"商品マスタに商品が登録されている\"]",
+      "        when: [\"検索キーワードを入力して検索ボタンをクリック\"]",
+      "        then: [\"該当する商品が一覧表示される\"]",
+      "@srs-->",
+      "```",
+      "",
+      "### 4.2 処理ステップの定義例",
+      "遷移記法を示す抜粋。ここに定義していない遷移先・画面は、実際の仕様で別途定義する。",
+      "```markdown",
+      "<!--@srs: functional-requirements: requirements[0]: processing_details",
+      "steps:",
+      "  # Fork: 1つのステップから複数へ（並行処理の開始）",
+      "  - id: \"start-order-validation\"",
+      "    actor: \"システム\"",
+      "    description: \"注文検証プロセス開始\"",
+      "    next:",
+      "      - step: \"validate-customer\"",
+      "        condition:",
+      "          type: \"always\"",
+      "      - step: \"check-inventory\"",
+      "        condition:",
+      "          type: \"always\"",
+      "      - step: \"check-fraud\"",
+      "        condition:",
+      "          type: \"always\"",
+      "",
+      "  # UIイベントからの遷移",
+      "  - id: \"input-payment-info\"",
+      "    actor: \"顧客\"",
+      "    description: \"支払情報入力\"",
+      "    screen_ui:",
+      "      screen: \"payment-form\"",
+      "      state: \"input-mode\"",
+      "    next:",
+      "      - step: \"validate-payment\"",
+      "        condition:",
+      "          type: \"ui_event\"",
+      "          value: \"submit-button\"",
+      "          description: \"送信ボタンクリック\"",
+      "      - step: \"cancel-order\"",
+      "        condition:",
+      "          type: \"ui_event\"",
+      "          value: \"cancel-link\"",
+      "          description: \"キャンセルリンククリック\"",
+      "",
+      "  # 検証ステップ",
+      "  - id: \"validate-payment\"",
+      "    actor: \"システム\"",
+      "    description: \"支払情報検証\"",
+      "    validations:",
+      "      - validation_id: \"card-number-format\"",
+      "        target: \"カード番号\"",
+      "        condition: \"isValidCardNumber(cardNumber)\"",
+      "        error_message: \"カード番号が正しくありません\"",
+      "    next:",
+      "      - step: \"process-payment\"",
+      "        condition:",
+      "          type: \"success\"",
+      "      - step: \"show-validation-errors\"",
+      "        condition:",
+      "          type: \"validation_error\"",
+      "",
+      "  # ビジネスエラーの処理",
+      "  - id: \"process-payment\"",
+      "    actor: \"システム\"",
+      "    description: \"決済処理\"",
+      "    preconditions:",
+      "      required_steps: [\"validate-customer\", \"check-inventory\"]",
+      "    business_errors:",
+      "      - error_code: \"INSUFFICIENT_BALANCE\"",
+      "        message: \"残高が不足しています\"",
+      "        user_action: \"別の支払方法を選択するか、チャージしてください\"",
+      "      - error_code: \"CARD_EXPIRED\"",
+      "        message: \"カードの有効期限が切れています\"",
+      "        user_action: \"カード情報を更新してください\"",
+      "    next:",
+      "      - step: \"send-confirmation\"",
+      "        condition:",
+      "          type: \"success\"",
+      "      - step: \"select-payment-method\"",
+      "        condition:",
+      "          type: \"business_error\"",
+      "          value: \"INSUFFICIENT_BALANCE\"",
+      "      - step: \"update-card-info\"",
+      "        condition:",
+      "          type: \"business_error\"",
+      "          value: \"CARD_EXPIRED\"",
+      "      - step: \"handle-system-error\"",
+      "        condition:",
+      "          type: \"error\"",
+      "          description: \"システムエラー発生時\"",
+      "@srs-->",
+      "```",
+      "",
+      "### 4.3 UI状態管理の例",
+      "```markdown",
+      "<!--@srs: functional-requirements: requirements[0]: ui_specifications",
+      "- ui_id: \"order-confirmation\"",
+      "  name: \"注文確認画面\"",
+      "  type: \"web\"",
+      "  states:",
+      "    - state_id: \"initial\"",
+      "      name: \"初期状態\"",
+      "    - state_id: \"processing\"",
+      "      name: \"処理中\"",
+      "    - state_id: \"validation-error\"",
+      "      name: \"検証エラー\"",
+      "",
+      "  screen_design:",
+      "    state_variations:",
+      "      - state_ref: \"processing\"",
+      "        field_modifications:",
+      "          - field_ref: \"confirm-button\"",
+      "            properties:",
+      "              - name: \"enabled\"",
+      "                value: false",
+      "              - name: \"label\"",
+      "                value: \"処理中...\"",
+      "        additional_sections:",
+      "          - section_id: \"progress-indicator\"",
+      "            title: \"\"",
+      "            display_items:",
+      "              - \"プログレスバー\"",
+      "              - \"処理ステップ表示\"",
+      "@srs-->",
+      "```",
+      "",
+      "### 4.4 受け入れ条件の例",
+      "```markdown",
+      "<!--@srs: functional-requirements: requirements[0]: acceptance_criteria",
+      "- scenario: \"正常な商品検索\"",
+      "  given:",
+      "    - \"商品マスタに100件の商品が登録されている\"",
+      "    - \"商品Aの名前に'テスト'が含まれる\"",
+      "  when:",
+      "    - \"検索キーワードに'テスト'を入力\"",
+      "    - \"検索ボタンをクリック\"",
+      "  then:",
+      "    - \"商品Aが検索結果に表示される\"",
+      "    - \"検索結果が関連度順にソートされる\"",
+      "",
+      "- scenario: \"在庫不足時の注文処理\"",
+      "  given:",
+      "    - \"商品Xの在庫が2個\"",
+      "    - \"顧客が商品Xを3個カートに入れている\"",
+      "  when:",
+      "    - \"注文確定ボタンをクリック\"",
+      "  then:",
+      "    - \"在庫不足エラーが表示される\"",
+      "    - \"購入可能な最大数（2個）が案内される\"",
+      "    - \"注文は確定されない\"",
+      "",
+      "- scenario: \"最小注文金額の適用\"",
+      "  given:",
+      "    - \"最小注文金額が1000円に設定されている\"",
+      "    - \"カートの合計金額が800円\"",
+      "  when:",
+      "    - \"注文確定を試みる\"",
+      "  then:",
+      "    - \"最小注文金額エラーが表示される\"",
+      "    - \"不足金額（200円）が明示される\"",
+      "@srs-->",
+      "```"
+    ]
+  },
+  "patternProperties": {
+    "^x-": {}
+  },
+  "additionalProperties": false
+}

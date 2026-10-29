@@ -1,0 +1,25 @@
+{
+  "name": "extended-srs-development-tools",
+  "private": true,
+  "description": "Shared linting and formatting for Extended SRS",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix --max-warnings=0",
+    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,cts,mts}\"",
+    "format:check": "prettier --check \"**/*.{js,cjs,mjs,ts,cts,mts}\"",
+    "check:style": "npm run lint && npm run format:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.13.0",
+    "prettier": "3.9.10",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.1"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.nyc_output/
+.cache/trivy/
+__pycache__/
+*.pyc
+*.tgz
+/extended-srs-core/schema/
+/.claude/settings.local.json
