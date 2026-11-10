@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-# extended-srs-mcp-server
+# @collmate/extended-srs-mcp-server
 
 Copyright (c) 2026 CoLLMate, Inc.
 
@@ -8,7 +8,41 @@ CoLLMate, Inc. が開発・提供する Extended SRS の公式 MCP サーバー�
 AI エージェントに接続し、仕様書の検証・状態取得・レビュー・ライフサイクル操作に利用する。解析・集約・状態遷移・着手可否・承認条件の判定は core に委ね、このサーバーは MCP 通信、文書とレビューの保存、Git、通知を担当する。
 
 Apache License 2.0。本文を `LICENSE` に同梱する。
-現在は `private: true` とし、npm レジストリへの公開を無効にしている。
+npm パッケージ `@collmate/extended-srs-mcp-server` として提供する。
+
+## クイックスタート
+
+Node.js 24 LTS 以降が必要。履歴参照や自動 commit には Git も使用する。インストールやビルドの作業は不要で、MCP クライアントに `npx` での起動を登録する。
+
+`EXTENDED_SRS_ROOT` には、入口の `srs.md` を置いたディレクトリの絶対パスを指定する。
+
+Claude Code に登録する場合:
+
+```sh
+claude mcp add extended-srs \
+  -e EXTENDED_SRS_ROOT=/absolute/path/to/project/spec \
+  -e EXTSRS_AUTO_COMMIT=false \
+  -- npx -y @collmate/extended-srs-mcp-server
+```
+
+`mcpServers` 形式を使うクライアントの場合:
+
+```json
+{
+  "mcpServers": {
+    "extended-srs": {
+      "command": "npx",
+      "args": ["-y", "@collmate/extended-srs-mcp-server"],
+      "env": {
+        "EXTENDED_SRS_ROOT": "/absolute/path/to/project/spec",
+        "EXTSRS_AUTO_COMMIT": "false"
+      }
+    }
+  }
+}
+```
+
+環境変数の詳細と動作の前提は「起動と設定」を参照する。
 
 ## ビルドとテスト
 
@@ -23,7 +57,11 @@ npm test
 npm run test:coverage
 ```
 
-test の前処理でサーバーを再ビルドする。テストは、状態遷移・レビュー・履歴に加えて、stdio で起動したサーバーの 13 ツールの定義と SRS ルートの検証を確認する。
+core は `.npmrc` の `install-links=true` により、リンクではなくビルド済みの内容のコピーとして `node_modules` に入る。core を変更した場合は、core をビルドし直してから、このディレクトリで `npm ci` を再実行する。
+
+`npm pack` で作るパッケージには、core とその実行時の依存を同梱する（`package.json` の `bundleDependencies`）。パッケージは隣に `extended-srs-core/` がない環境でも、単体でインストールして起動できる。
+
+test の前処理でサーバーを再ビルドする。テストは、状態遷移・レビュー・履歴に加えて、stdio で起動したサーバーの 13 ツールの定義と SRS ルートの検証、パッケージに core と依存が欠けずに入ることを確認する。
 
 `test:coverage` のレポートは `coverage/` に出力する。
 
@@ -76,7 +114,7 @@ Git 履歴の取得も、処理開始時のルートディレクトリを保持�
 
 文書の保存では、同じファイルに対する MCP プロセス間ロックを取得してから、読み取り時点の内容との照合と原子的な置換を行う。同時更新の競合はエラーとして返し、変更を黙って上書きしない。競合した操作は現在の文書を確認して再実行する。異常終了で残ったロックは60秒で回収可能になる。ロックを使わない外部エディターの更新も置換直前の再読込で検出するが、その再読込後の書込みまで排他するものではない。
 
-`mcpServers` 形式を使うクライアントでの設定例。パスは利用環境の絶対パスに置き換える。
+リポジトリからビルドしたサーバーを直接起動する場合の、`mcpServers` 形式での設定例。パスは利用環境の絶対パスに置き換える。
 
 ```json
 {
